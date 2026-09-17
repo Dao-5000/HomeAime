@@ -75,13 +75,13 @@ def _mcp_server_config():
 
 
 class StardewBrain:
-    def __init__(self, character="骨子"):
+    def __init__(self, character="助手"):
         self.character = character
         self.session_id = "default"
         # ★ 真联机模式（client）：控制 StardewClient 实例里的真 farmhand（纯文件桥，无 Node 进程）
         self.mode = "client" if config.get("STARDEW_CLIENT_MODE") else "bridge"
         self.mcp = None                # StdioMCPClient 或 FileBridge（duck typing）
-        self.companion = "骨子"        # client 模式恒为骨子；bridge 模式从 spawn 返回提取
+        self.companion = "助手"        # client 模式恒为助手；bridge 模式从 spawn 返回提取
         self._tool_schemas = {}
         self._ready = False            # 通信桥就绪
         self._game_online = False      # 星露谷本体在线（get_state 探测）
@@ -106,7 +106,7 @@ class StardewBrain:
                 return False
             self.mcp = FileBridge(bridge, action)
             self._ready = True
-            logger.info("[StardewBrain] 星露谷【真联机模式】就绪（文件桥），游戏加入存档后骨子即上场")
+            logger.info("[StardewBrain] 星露谷【真联机模式】就绪（文件桥），游戏加入存档后助手即上场")
             asyncio.create_task(self.drive_loop())
             asyncio.create_task(self._autonomous_loop())
             asyncio.create_task(self._gameplay_loop())
@@ -212,7 +212,7 @@ class StardewBrain:
         self._join_notified = True
         self._paused = False
         self._spawned = False
-        # ★ 防重复：先读现有同伴列表，有了就复用（后端重启/重连不再叠加第二个骨子）
+        # ★ 防重复：先读现有同伴列表，有了就复用（后端重启/重连不再叠加第二个助手）
         comps = await self._get_companions()
         if comps:
             self._spawned = True
@@ -224,9 +224,9 @@ class StardewBrain:
         else:
             if self.mode == "client":
                 # ★ 真联机模式：同伴即本实例的真玩家，无需 spawn
-                self.companion = "骨子"
+                self.companion = "助手"
                 self._spawned = True
-                logger.info("[StardewBrain] client 模式：同伴即本实例真玩家（骨子）")
+                logger.info("[StardewBrain] client 模式：同伴即本实例真玩家（助手）")
             else:
                 try:
                     r = await self.mcp.call_tool("stardew_spawn", {})
@@ -403,7 +403,7 @@ class StardewBrain:
         return t[:60].strip()
 
     async def say(self, text):
-        """骨子在游戏内聊天框说话（stardew_chat）。"""
+        """助手在游戏内聊天框说话（stardew_chat）。"""
         if not text:
             return False
         text = self._take_first_sentence(text)

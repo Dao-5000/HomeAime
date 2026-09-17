@@ -166,7 +166,7 @@ def test_learned_rule_auto_learner_roundtrip():
     """她学到的规矩要能通过**自动学习入口**沉淀，并且下一轮被注入。
 
     原先唯一的写入口是 agent 工具（只在助手模式的 agent 循环里跑），
-    日常聊天里立的规矩没有任何路径被记住（真机 learned_rules/骨子.json 恒为 `[]`）。
+    日常聊天里立的规矩没有任何路径被记住（真机 learned_rules/助手.json 恒为 `[]`）。
     """
     from backend import learned_rules as lr
     from backend.agent import self_modules as sm
@@ -228,7 +228,7 @@ def test_personality_state_falls_back_to_default_bucket(fresh_db):
     """同一 session 下学习成果写在 'default' 桶时，按角色读也必须能拿到。
 
     真机现象：personality_state 同时存在
-      (s_93ceb989…, '骨子')   —— 人设快照
+      (s_93ceb989…, '助手')   —— 人设快照
       (s_93ceb989…, 'default') —— 反思/反馈写出的行为策略（warmth/humor/
                                  relationship_behavior）
     两边都在被写，而读侧只按 character_id 精确取一条 → 约一半人格学习读不到。
@@ -336,7 +336,7 @@ def test_reflection_must_not_pin_five_dim_at_ceiling(fresh_db):
     """反思写入也不许把五维钉死在上限（否则"越聊越像人"变成"越聊越固定"）。
 
     ★ 真机现场（2026-09-17 03:46，用户聊了一轮之后）：
-        personality_state('骨子') = warmth 20 / dominance -20 / humor 20 /
+        personality_state('助手') = warmth 20 / dominance -20 / humor 20 /
                                    initiative 20 / attachment 20   ← 全顶格
       而我加在 `update_five_dim` 里的均值回归**根本没机会生效**：
       `reflection/strategy.py` 的 `apply_reflection_to_personality_state` 是**第二个

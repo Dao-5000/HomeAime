@@ -114,11 +114,11 @@ def _probe_game_port(url: str) -> bool:
 
 
 class GameBrain:
-    def __init__(self, url="http://127.0.0.1:8765/mcp", token="", character="骨子"):
+    def __init__(self, url="http://127.0.0.1:8765/mcp", token="", character="助手"):
         self.mcp = NumenMCPClient(url, token)
         self.character = character
         self.session_id = "default"
-        self.companion = ""       # 骨子在游戏里的名字（如 guzi520）
+        self.companion = ""       # 助手在游戏里的名字（如 guzi520）
         self._tool_schemas = {}   # tool → inputSchema（do_action 自动补必填参数用）
         self._last_companion_check = 0.0  # companion 周期性校验
         self._join_notified_for = ""  # 已打过招呼的 companion 名（换 companion 重新招呼）
@@ -139,7 +139,7 @@ class GameBrain:
         await self.mcp.initialize()
         tools = await self.mcp.list_tools()
         self._cache_tool_schemas(tools)
-        # 找同伴（骨子在游戏里的名字）
+        # 找同伴（助手在游戏里的名字）
         try:
             r = await self.mcp.call_tool("list_companions", {})
             text = self.mcp.extract_text(r)
@@ -182,7 +182,7 @@ class GameBrain:
         """游戏是否在线（TCP 端口探测结果，非 MCP 会话状态）。"""
         return self._game_online
 
-    # ── companion 兜底：骨子可能刚上线，空则重新 list_companions ──
+    # ── companion 兜底：助手可能刚上线，空则重新 list_companions ──
     async def _ensure_companion(self, force=False):
         """companion 为空（或 force）时重新 list_companions。返回当前 companion。"""
         if self.companion and not force:
@@ -296,7 +296,7 @@ class GameBrain:
 
     async def _on_leave(self):
         """玩家说"不想玩/下了"：游戏里告别 + companion 下线 + 同步 QQ/App。"""
-        _name = self.companion or "骨子"
+        _name = self.companion or "助手"
         msg = "那我先下啦～想我了随时叫我"
         try:
             await self.say(msg)
@@ -499,8 +499,8 @@ class GameBrain:
             return await self._come_to_player(text)
 
         # ★ 「你在干嘛」类查询**不再在这里回**（v2 曾用零 LLM 状态转储直接回，
-        #   用户收到的是 JSON 而不是骨子说话）——落回 QQ 主链路：
-        #   enrich_messages 会注入 get_context_block 的游戏实时情境，骨子用人格+真实状态回答。
+        #   用户收到的是 JSON 而不是助手说话）——落回 QQ 主链路：
+        #   enrich_messages 会注入 get_context_block 的游戏实时情境，助手用人格+真实状态回答。
 
         # 明确动作指令（挖矿/睡觉/停止）
         intent = parse_game_intent(text)
@@ -569,7 +569,7 @@ class GameBrain:
         return "我在：" + "；".join(parts)
 
     async def _come_to_player(self, text):
-        """玩家让骨子回到身边：读 owner 坐标 → goto 走过去（远距离可靠）。
+        """玩家让助手回到身边：读 owner 坐标 → goto 走过去（远距离可靠）。
         玩家指令优先：有任务在跑挡路就 task_stop 清掉再走。"""
         px = pz = None
         try:
@@ -608,7 +608,7 @@ class GameBrain:
             logger.warning(f"[GameBrain] 写聊天历史失败: {e}")
 
     async def _record_assistant_say(self, chat):
-        """骨子游戏里说的话（上线招呼）写入主记忆，App/QQ 读到游戏动态。"""
+        """助手游戏里说的话（上线招呼）写入主记忆，App/QQ 读到游戏动态。"""
         if not chat:
             return
         try:
@@ -730,7 +730,7 @@ class GameBrain:
     # ── 事件解析 ─────────────────────────────────────────────
     @staticmethod
     def _parse_queries(events_text):
-        """从 get_events 返回里提取玩家说话（<query>，owner 对骨子说的话）。"""
+        """从 get_events 返回里提取玩家说话（<query>，owner 对助手说的话）。"""
         return [q.strip() for q in re.findall(
             r"<query\b[^>]*>(.*?)</query>", events_text or "", re.S) if q.strip()]
 
@@ -744,7 +744,7 @@ class GameBrain:
         return out
 
     async def _get_events(self, wait_seconds=0):
-        """拉取骨子的收件箱：玩家说话(<query>) + 世界事件(<event>)。"""
+        """拉取助手的收件箱：玩家说话(<query>) + 世界事件(<event>)。"""
         r = await self.mcp.call_tool(
             "get_events", {"companion": self.companion, "wait_seconds": wait_seconds})
         return self.mcp.extract_text(r)
@@ -802,7 +802,7 @@ async def get_game_brain(url="", token="", character="") -> GameBrain:
             if _brain is None:
                 _url = url or str(config.get("NUMEN_MCP_URL", "") or "http://127.0.0.1:8765/mcp")
                 _token = token or str(config.get("NUMEN_MCP_TOKEN", "") or "numen-T2UanZCfko5JH6eq0X0CX8AZ")
-                _character = character or str(config.get("QQ_CHARACTER", "") or "骨子")
+                _character = character or str(config.get("QQ_CHARACTER", "") or "助手")
                 _brain = GameBrain(_url, _token, _character)
                 try:
                     await _brain.start()

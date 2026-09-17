@@ -8,7 +8,7 @@
 // ── 游戏陪伴（卡片）──
 const COMPANION_GAMES = [
   { id: 'minecraft', label: '我的世界', icon: '⛏️', desc: '让当前 AI 角色进入你的世界一起玩' },
-  { id: 'stardew',   label: '星露谷',   icon: '🌾', desc: '骨子进你的农场，一起种田钓鱼' },
+  { id: 'stardew',   label: '星露谷',   icon: '🌾', desc: '助手进你的农场，一起种田钓鱼' },
 ];
 
 // ── 生活陪伴（聚合 UI，一次选一个当前陪伴）──
@@ -199,13 +199,13 @@ async function _launchStardew() {
   } catch (e) { toast('启动失败：' + e.message); }
 }
 
-// ★ 真联机模式：拉起骨子的第二个游戏实例（第 2 步）。
-//   完整流程：① 你自己开游戏读档并主持联机 ② 点此按钮自动弹出骨子实例 ③ 在骨子实例「协作→加入」进农场
+// ★ 真联机模式：拉起助手的第二个游戏实例（第 2 步）。
+//   完整流程：① 你自己开游戏读档并主持联机 ② 点此按钮自动弹出助手实例 ③ 在助手实例「协作→加入」进农场
 async function _launchStardewClient() {
   try {
     const r = await fetch('/api/stardew/launch_client', { method: 'POST' });
     const j = await r.json();
-    toast(j.ok ? (j.message || '骨子实例启动中') : (j.error || '启动失败'));
+    toast(j.ok ? (j.message || '助手实例启动中') : (j.error || '启动失败'));
     setTimeout(() => _refreshSdStatus(), 5000);
   } catch (e) { toast('启动失败：' + e.message); }
 }
@@ -319,7 +319,7 @@ function renderCompanion() {
         ? 'TA 已经在你的世界里玩了，QQ 上喊 TA 就行'
         : g.desc + '（点击开启并自动进游戏）' }),
       sel ? h('div', { class: 'cp-card-tag', text: '陪伴中' }) : null,
-      inGame ? h('div', { class: 'cp-card-tag', style: 'color:#0a0;', text: '● ' + (st.companion || '骨子') + ' 已在游戏里' }) : null,
+      inGame ? h('div', { class: 'cp-card-tag', style: 'color:#0a0;', text: '● ' + (st.companion || '助手') + ' 已在游戏里' }) : null,
     );
     card.addEventListener('click', () => _toggleGame(g, wrap));
     gameGrid.appendChild(card);
@@ -493,21 +493,21 @@ async function _renderStatus(box, cur) {
     if (!_sdStatus.enabled) {
       sd.appendChild(h('div', { class: 'cp-mc-line off', text: '○ 未启用：按《星露谷AI陪伴-接入指南.md》配置后重启' }));
     } else if (!_sdStatus.online) {
-      // ★ 真联机模式：骨子还没加入农场 → 展示三步指引 + 一键拉骨子实例
-      sd.appendChild(h('div', { class: 'cp-mc-line off', text: '○ 骨子还没加入农场 —— 联机三步：' }));
+      // ★ 真联机模式：助手还没加入农场 → 展示三步指引 + 一键拉助手实例
+      sd.appendChild(h('div', { class: 'cp-mc-line off', text: '○ 助手还没加入农场 —— 联机三步：' }));
       sd.appendChild(h('div', { class: 'cp-mc-hint', text: '① 你自己开游戏：Steam 启动 → 读档 → Esc→协作→主持（需盖过联机小屋）' }));
-      sd.appendChild(h('div', { class: 'cp-mc-hint', text: '② 点「启动骨子的游戏实例」，自动弹出第二个游戏' }));
+      sd.appendChild(h('div', { class: 'cp-mc-hint', text: '② 点「启动助手的游戏实例」，自动弹出第二个游戏' }));
       sd.appendChild(h('div', { class: 'cp-mc-hint', text: '③ 在弹出的游戏里：协作→加入（列表空就点「直接 IP」填 127.0.0.1）→ 走进联机小屋' }));
-      sd.appendChild(h('button', { class: 'chip', text: '🎮 启动骨子的游戏实例', style: 'margin-top:8px;', onclick: () => { _launchStardewClient(); setTimeout(() => _renderStatus(box, cur), 8000); } }));
+      sd.appendChild(h('button', { class: 'chip', text: '🎮 启动助手的游戏实例', style: 'margin-top:8px;', onclick: () => { _launchStardewClient(); setTimeout(() => _renderStatus(box, cur), 8000); } }));
       sd.appendChild(h('button', { class: 'chip', text: '🚀 帮我启动我的游戏', style: 'margin-top:8px;margin-left:6px;', onclick: () => { _launchStardew(); setTimeout(() => _renderStatus(box, cur), 3000); } }));
     } else {
-      sd.appendChild(h('div', { class: 'cp-mc-line', text: '● 骨子正在农场里' + (_sdStatus.companion ? '（' + _sdStatus.companion + '）' : '') }));
+      sd.appendChild(h('div', { class: 'cp-mc-line', text: '● 助手正在农场里' + (_sdStatus.companion ? '（' + _sdStatus.companion + '）' : '') }));
       // 同伴实时状态（在做什么/模式/位置/体力，后端从游戏 bridge_data 读取）
       try {
         const r = await fetch('/api/stardew/status');
         const j = await r.json();
         for (const c of (j.companions || [])) {
-          sd.appendChild(h('div', { class: 'cp-mc-line', text: '🌾 ' + (c.name || '骨子') + '：' + (c.status || '待机') + '（' + (c.location || '?') + ' · 体力 ' + (c.stamina == null ? '?' : c.stamina) + '% · ' + (c.mode || '?') + '模式）' }));
+          sd.appendChild(h('div', { class: 'cp-mc-line', text: '🌾 ' + (c.name || '助手') + '：' + (c.status || '待机') + '（' + (c.location || '?') + ' · 体力 ' + (c.stamina == null ? '?' : c.stamina) + '% · ' + (c.mode || '?') + '模式）' }));
         }
       } catch (_) {}
       const quick = h('div', { style: 'margin-top:8px;' });

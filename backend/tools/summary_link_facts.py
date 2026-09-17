@@ -63,7 +63,7 @@ def _overlap(a: str, b: str) -> float:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--char", default="骨子")
+    ap.add_argument("--char", default="助手")
     ap.add_argument("--block", type=int, default=0, help="看某个块的候选事实")
     ap.add_argument("--link", type=int, default=0, help="要登记的块 id")
     ap.add_argument("--facts", default="", help="逗号分隔的事实 id")

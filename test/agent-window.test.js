@@ -1235,7 +1235,7 @@ test('renderAgent: 角色键用当前会话角色的名字（不发本地 uid，
   const node = makeEl('page-agent');
   await withFakeDom(node, async (g) => {
     /* 仓库惯例（chat.js / ws_client.js / companion.js）：角色键发**名字** */
-    g.Chat = { contact: { id: 'uid-777', name: '骨子' } };
+    g.Chat = { contact: { id: 'uid-777', name: '助手' } };
     /* 就算 Store 里有别的联系人，也不许拿 contacts[0] 顶缸 */
     g.Store = { listContacts: () => [{ id: 'someone-else', name: '别人' }] };
     const calls = [];
@@ -1257,9 +1257,9 @@ test('renderAgent: 角色键用当前会话角色的名字（不发本地 uid，
 
     const send = calls.filter(c => c.url === '/api/agent/window/send');
     assert.strictEqual(send.length, 1, JSON.stringify(calls));
-    assert.strictEqual(send[0].body.character_id, '骨子',
+    assert.strictEqual(send[0].body.character_id, '助手',
       '角色键要用当前角色的名字（本地 uid 会被后端回落成 default 桶）：' + JSON.stringify(send[0].body));
-    assert.strictEqual(send[0].body.character_name, '骨子', JSON.stringify(send[0].body));
+    assert.strictEqual(send[0].body.character_name, '助手', JSON.stringify(send[0].body));
     assert.strictEqual(send[0].body.character_id === 'uid-777', false, '不许发本地 uid');
     assert.strictEqual(send[0].body.character_id === 'someone-else', false, '不许取 contacts[0]');
 
@@ -1267,8 +1267,8 @@ test('renderAgent: 角色键用当前会话角色的名字（不发本地 uid，
     await tick();
     const cf = calls.filter(c => c.url === '/api/agent/window/confirm');
     assert.strictEqual(cf.length, 1, JSON.stringify(calls));
-    assert.strictEqual(cf[0].body.character_id, '骨子', JSON.stringify(cf[0].body));
-    assert.strictEqual(cf[0].body.character_name, '骨子', JSON.stringify(cf[0].body));
+    assert.strictEqual(cf[0].body.character_id, '助手', JSON.stringify(cf[0].body));
+    assert.strictEqual(cf[0].body.character_name, '助手', JSON.stringify(cf[0].body));
   });
 });
 
@@ -1479,7 +1479,7 @@ test('AgentWindowMirrorToChat: agent_final / agent_stopped / agent_error 都把�
       g.AgentWindowIngest({ type: 'agent_tool', task_id: 't-' + i, tool: 'read', tool_call_id: 'tc' + i, args: {} });
       assert.strictEqual(chatBody.children.length, 1, '前提：' + t + ' 前卡在');
       /* ★ R66：用 window.py 结算时真正推的形状（带 task_id/session_id/character_id），不是裸事件 */
-      g.AgentWindowIngest({ type: t, task_id: 't-' + i, session_id: 's-1', character_id: '骨子',
+      g.AgentWindowIngest({ type: t, task_id: 't-' + i, session_id: 's-1', character_id: '助手',
                             status: 'done', answer: '干完了', text: '出错了' });
       assert.strictEqual(chatBody.children.length, 0, t + ' 之后聊天里的卡必须消失');
     });
@@ -1555,7 +1555,7 @@ test('R66: 后端结算推的终止事件（形状同 window.py 的 dict(ev, tas
     /* ★ R66：这就是 window.py 结算时真正推上 WS 的那一条（带 task_id / session_id / character_id）——
        卡的「收」必须由它驱动，不能只靠本地合成的假事件。 */
     assert.strictEqual(g.AgentWindowIngest({ type: 'agent_final', task_id: 't-9',
-                                             session_id: 's-1', character_id: '骨子', status: 'done' }), true);
+                                             session_id: 's-1', character_id: '助手', status: 'done' }), true);
     assert.strictEqual(chatBody.children.length, 0, '生产终止事件必须把卡收掉');
   });
 });
@@ -1646,7 +1646,7 @@ test('R66: 两件活的步数各算各的（交错时不许把 B 的步数算到
 test('R66: 角色键在 send/confirm 时实时读（Chat.close() 清空 contact / 换伴侣都要跟上）', async () => {
   const node = makeEl('page-agent');
   await withFakeDom(node, async (g) => {
-    g.Chat = { contact: { id: 'uid-1', name: '骨子' } };
+    g.Chat = { contact: { id: 'uid-1', name: '助手' } };
     g.Store = { getContact: () => null, listContacts: () => [] };
     const calls = [];
     g.fetch = (url, opt) => {
@@ -1684,7 +1684,7 @@ test('R66: 角色键在 send/confirm 时实时读（Chat.close() 清空 contact 
     const cf = calls.filter(c => c.url === '/api/agent/window/confirm');
     assert.strictEqual(cf.length, 1, JSON.stringify(calls));
     assert.strictEqual(cf[0].body.character_id, '新伴侣', JSON.stringify(cf[0].body));
-    assert.strictEqual(cf[0].body.character_id === '骨子', false, '不许再发挂载那一刻的旧名字');
+    assert.strictEqual(cf[0].body.character_id === '助手', false, '不许再发挂载那一刻的旧名字');
   });
 });
 

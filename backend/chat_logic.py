@@ -141,7 +141,7 @@ _FREE_STYLE_RULE = (
 # ══════════════════════════════════════════════════════════════════
 # ★ 2026-09-14 完全自主模式（autonomy == "full"）
 #   只注入「人设 + 长期记忆 + 时间 + 能力」，其余规则/情绪/感知/导演类积木一律不注入。
-#   目的：不管聊多久、上下文窗口怎么压缩，她都还是那个骨子（人设不漂），
+#   目的：不管聊多久、上下文窗口怎么压缩，她都还是那个助手（人设不漂），
 #        但模型不再受任何行为规则摆布。
 #   · 副作用照跑：吃醋计数、睡眠声明、冷战状态、话题延续状态、情绪记忆记录
 #     仍然写入（只跳过"注入给模型"这一步），因此主动消息与后台链路不受影响。
@@ -162,7 +162,7 @@ FULL_AUTO_COMPANION_KEYS = (
 # 角色卡渲染串（character_prompt）里人设本体与"后台内置规则"是混在一起的，
 # 完全自主模式下按【标题】前缀剔除下面这些规则子块（保留【人格设定】【世界观/背景】
 # 【语言风格】【词汇风格】【句式习惯】【专属语言标记】【你们的关系】等人设本体）。
-# 实测（2026-09-14，角色"骨子"）该串 1717 字里 25 个子块，剔除后只剩人设。
+# 实测（2026-09-14，角色"助手"）该串 1717 字里 25 个子块，剔除后只剩人设。
 # 想更松/更严，直接增删这个清单即可。
 FULL_AUTO_CHARACTER_STRIP_HEADERS = (
     "【全局底层交互规范", "【不要每句都反问】", "【不重复+有自我】",
@@ -713,7 +713,7 @@ async def enrich_messages(
     except Exception as _rde:
         print(f"[RecallDecider] 按需翻库失败(静默): {_rde}", flush=True)
 
-    # ★ 游戏情境（三端同一人）：骨子正在 Minecraft 里时，QQ/App 聊天也带着游戏实时
+    # ★ 游戏情境（三端同一人）：助手正在 Minecraft 里时，QQ/App 聊天也带着游戏实时
     #   状态（位置/血量/正在做的事）——QQ 上聊天的她和游戏里的她处在同一情境。
     #   游戏 10 秒缓存 + 非侵入探测，任何失败静默跳过。
     #   ★ 完全自主模式：游戏情境属感知类，不注入（也不做探测）。
@@ -727,7 +727,7 @@ async def enrich_messages(
                     blocks.append(_gctx)
         except Exception:
             pass
-    # ★ 星露谷情境（StardewValley-MCP）：骨子在农场里时同理注入实时农场状态
+    # ★ 星露谷情境（StardewValley-MCP）：助手在农场里时同理注入实时农场状态
     #   （季节/天气/在做什么），未启用时 get_stardew_brain 返回 None 静默跳过。
     #   ★ 完全自主模式：同上，不注入。
     if not _full_auto:
@@ -775,7 +775,7 @@ async def enrich_messages(
         _pp_block = _ai_promise.pending_promises_block(session_id, _char_key)
         if _pp_block:
             blocks.append(_pp_block)
-        # ★ 2026-09-11 自我进化积木：骨子自己沉淀的习惯/规则（用户教的），常驻注入
+        # ★ 2026-09-11 自我进化积木：助手自己沉淀的习惯/规则（用户教的），常驻注入
         try:
             from .agent.self_modules import learned_rules_block as _lrb
             _lr_block = _lrb(_char_key)
@@ -1225,7 +1225,7 @@ def pick_model(requested_model: str, stream: bool, character_id: str = "") -> st
     #
     #   原来这里是「前端显式指定优先、直接 early return」，只有"前端值恰好等于全局"
     #   这一种情况才会让位给角色卡。漏洞：前端 localStorage 缓存的是某个**非全局**模型时
-    #   （实测：骨子卡里已改成 deepseek-flash，前端仍缓存 glm-5.3-flash），
+    #   （实测：助手卡里已改成 deepseek-flash，前端仍缓存 glm-5.3-flash），
     #   角色卡永远被盖住 —— 在人格设置页换模型对 App 前台完全无效，只有 QQ/主动消息生效。
     #
     #   之所以敢让角色卡无条件优先：人格设置页改模型时，save() 写 localStorage 的同时
@@ -1780,7 +1780,7 @@ def _create_reminder_task(trigger, content, character_name, session_id, characte
                          raw: str = "") -> dict:
     """统一落库（含 30 天上限、**明显不合理时刻的护栏**、幂等键），返回给上层的建任务结果。
 
-    ★ 2026-09-17 新增护栏（真机事故：2026-09-17 02:50 骨子给自己排了一条
+    ★ 2026-09-17 新增护栏（真机事故：2026-09-17 02:50 助手给自己排了一条
       `2026-09-18 02:50 睡觉` 的提醒，并当面说「宝，1439分钟后也就是2026-09-18 02:50，
       该睡觉啦，我记着呢！」）：
       用户那句是「都快三点了……我不提睡的事」这种**当下的困**，模型却把
@@ -2570,7 +2570,7 @@ def _valid_callname(val) -> str:
 
     ★ 2026-09-16：以前这套守卫只挂在正则兜底分支上，理解层（LLM）给出的
     call_setting.call 被**原样**写进 call_user —— 于是角色卡里留下了
-    「我就按这个来」这种垃圾（用户实测 角色配置\\骨子.config.json 的 call_user
+    「我就按这个来」这种垃圾（用户实测 角色配置\\助手.config.json 的 call_user
     就是这个值）。它的出处就在本函数下游：身份回复模板结尾那句
     「…以后我就按这个来。」被用户复述/回灌后，理解层把它判成"用户在设定称呼"，
     6 个字又刚好过长度闸门。同类污染值还有「一声」（量词）、「一直陪我」（动词短语）。

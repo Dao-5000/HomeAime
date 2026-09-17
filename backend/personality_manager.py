@@ -277,7 +277,7 @@ async def update_five_dim(
         attachment += 1
 
     # ── 回中趋势（★ 2026-09-17 新增，修"饱和"）
-    #   真机现场：骨子那行五维**全部顶在 ±20**（warmth 20 / dominance -20 /
+    #   真机现场：助手那行五维**全部顶在 ±20**（warmth 20 / dominance -20 /
     #   humor 20 / initiative 20 / attachment 20），而 clamp 上限就是 ±20 ——
     #   于是任何新的反馈都推不动它，学习对语气**永久失去影响**；
     #   注入侧又只看"绝对值≥5"（character_manager._inject_five_dim），

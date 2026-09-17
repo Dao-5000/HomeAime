@@ -6,7 +6,7 @@
 （`chat_logic.py:743-747`），`_learn_rule()` 工具也在，但**唯一的写入口是那个工具**，
 而工具只跑在"助手模式"的 agent 循环里 —— 用户在日常聊天里说「以后别半夜问我睡没睡」
 「记住我不吃香菜」时，这些话**没有任何路径被沉淀成规则**。
-真机取证：`%APPDATA%\\HomeAime\\data\\learned_rules\\骨子.json` = `[]`（2 字节），
+真机取证：`%APPDATA%\\HomeAime\\data\\learned_rules\\助手.json` = `[]`（2 字节），
 17.4 万行日志里 `learn_rule` / `learned_rules` 命中 **0** 次。
 
 ## 设计（与 style_feedback 同构，保持项目习惯）

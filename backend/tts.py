@@ -1581,7 +1581,7 @@ async def _gen_aliyun_stream(text: str, voice_cfg: dict, chunk_callback):
 async def create_voice_replica(audio_path: str, preferred_name: str = "guzi",
                                text: str = "") -> dict:
     """
-    用骨子的参考音频在云端复刻音色（base64 直传，桌面应用无需公网 URL）。
+    用助手的参考音频在云端复刻音色（base64 直传，桌面应用无需公网 URL）。
     返回 {"ok": True, "voice_id": "...", ...} 或 {"ok": False, "error": "..."}
     """
     api_key = _config.dashscope_api_key()

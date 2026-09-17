@@ -26,7 +26,7 @@ from backend import config  # noqa: E402
 import backend.ai_promise as ap  # noqa: E402
 from backend.deepseek_api import chat_once  # noqa: E402
 
-# 事故原话（用户当时说的是这一句，骨子回的"1439分钟后…"）
+# 事故原话（用户当时说的是这一句，助手回的"1439分钟后…"）
 CASE = "都快三点了……我不提睡的事，你别自己往那上面想"
 
 # 为了复现"当时是凌晨 2:50"的处境，把当前时间如实体现在 prompt 里
@@ -34,7 +34,7 @@ NOW = "2026-09-17 02:50"
 
 
 async def ask(system_prompt: str, label: str):
-    model = config.memory_extract_model("骨子")
+    model = config.memory_extract_model("助手")
     key = config.api_key_for_model(model)
     print(f"\n{'='*76}\n{label}\n{'='*76}")
     print(f"模型={model}  temp=0.1  当前时间={NOW}")

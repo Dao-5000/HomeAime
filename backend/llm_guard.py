@@ -2,7 +2,7 @@
 """LLM provider 熔断 / 硬超时 / 失败降级 —— 2026-09-15 DeepSeek 宕机事故治本。
 
 事故（真机日志 backend_dev.log 行 143293-144455）：
-  角色卡「骨子」大脑是 glm-5.3-flash，但
+  角色卡「助手」大脑是 glm-5.3-flash，但
     · 全局 DEEP_THINKING_MODEL=deepseek-flash → **回复主链路**打在 DeepSeek；
     · 角色卡 memory_model=deepseek-chat → 记忆/情绪/关系/画像/承诺/反思/日总结等
       二十多个后台抽取器全部打在 DeepSeek。

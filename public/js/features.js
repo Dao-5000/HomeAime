@@ -400,7 +400,7 @@ function renderFeatures() {
         const msg = testMessages[testIdx % testMessages.length];
         testIdx++;
         let avatar = '';
-        let name = '骨子';
+        let name = '助手';
         try {
           if (typeof Chat !== 'undefined' && Chat.contact) {
             avatar = Chat.contact.avatarUrl || '';
@@ -696,18 +696,18 @@ function renderStardewCard(wrap) {
     }, 15000);
   });
   card.appendChild(launchBtn);
-  // ★ 真联机模式：一键拉起骨子的第二个游戏实例（App 内替代手动双击 StardewModdingAPI.exe）
-  const clientLaunchBtn = h('button', { class: 'btn btn-primary', style: 'display:none;margin-bottom:10px', text: '🎮 启动骨子的游戏实例' });
+  // ★ 真联机模式：一键拉起助手的第二个游戏实例（App 内替代手动双击 StardewModdingAPI.exe）
+  const clientLaunchBtn = h('button', { class: 'btn btn-primary', style: 'display:none;margin-bottom:10px', text: '🎮 启动助手的游戏实例' });
   clientLaunchBtn.addEventListener('click', async () => {
     clientLaunchBtn.disabled = true;
     clientLaunchBtn.textContent = '启动中…';
     try {
       const r = await fetch('/api/stardew/launch_client', { method: 'POST' });
       const j = await r.json();
-      toast(j.ok ? (j.message || '骨子实例启动中') : (j.error || '启动失败'));
+      toast(j.ok ? (j.message || '助手实例启动中') : (j.error || '启动失败'));
     } catch (e) { toast('启动失败：' + e.message); }
     clientLaunchBtn.disabled = false;
-    clientLaunchBtn.textContent = '🎮 启动骨子的游戏实例';
+    clientLaunchBtn.textContent = '🎮 启动助手的游戏实例';
     let n = 0;
     const timer = setInterval(async () => {
       n++;
@@ -765,14 +765,14 @@ function renderStardewCard(wrap) {
         return;
       }
       if (!j.game_online) {
-        // ★ 真联机模式：骨子还没加入农场 → 三步指引 + 一键拉骨子实例
-        statusBox.textContent = '联机三步：① 你自己开游戏，读档后 Esc→协作→主持（需盖过联机小屋） ② 点「启动骨子的游戏实例」 ③ 在弹出的游戏里 协作→加入（列表空就点直接 IP，填 127.0.0.1）→ 走进联机小屋';
+        // ★ 真联机模式：助手还没加入农场 → 三步指引 + 一键拉助手实例
+        statusBox.textContent = '联机三步：① 你自己开游戏，读档后 Esc→协作→主持（需盖过联机小屋） ② 点「启动助手的游戏实例」 ③ 在弹出的游戏里 协作→加入（列表空就点直接 IP，填 127.0.0.1）→ 走进联机小屋';
         cmdBox.style.display = 'none';
         clientLaunchBtn.style.display = '';
         launchBtn.style.display = '';
         return;
       }
-      statusBox.textContent = '✅ 骨子正在农场里' + (j.companion ? ('（同伴：' + j.companion + '）') : '') + '，点按钮指挥她：';
+      statusBox.textContent = '✅ 助手正在农场里' + (j.companion ? ('（同伴：' + j.companion + '）') : '') + '，点按钮指挥她：';
       cmdBox.style.display = '';
       clientLaunchBtn.style.display = 'none';
       launchBtn.style.display = 'none';

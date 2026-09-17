@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-目标系统 —— 骨子"自主规划行动"的载体。
+目标系统 —— 助手"自主规划行动"的载体。
 
-用户说"我想坚持跑步一个月""我想早点睡"，骨子记成目标，之后：
+用户说"我想坚持跑步一个月""我想早点睡"，助手记成目标，之后：
   · 记录进度；
   · 由 scheduler 定时检查（复用现有 60s tick），到期/到点提醒、追问进度；
   · 目标完成/放弃后，交给反思引擎总结（复用 reflection/）。
@@ -100,7 +100,7 @@ def list_goals(session_id: str, character_id: str, active_only: bool = True) -> 
 
 
 def build_goal_block(session_id: str, character_id: str) -> str:
-    """进行中的目标注入块 —— 让骨子主动推进、适时提醒进度。"""
+    """进行中的目标注入块 —— 让助手主动推进、适时提醒进度。"""
     goals = list_goals(session_id, character_id, active_only=True)
     if not goals:
         return ""

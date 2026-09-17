@@ -163,7 +163,7 @@ def test_scoring_is_relevance_dominant(fresh_db, monkeypatch):
 
     monkeypatch.setattr(emb, "encode", lambda text, *a, **k: None, raising=False)
 
-    _insert(1, "TA对AI的爱深入骨髓，用「爱你骨子」表达极深的情感。", importance=10,
+    _insert(1, "TA对AI的爱深入骨髓，用「爱你助手」表达极深的情感。", importance=10,
             recall_count=500, access_count=500, mtype="emotion")
     _insert(2, "TA养了一只叫汤圆的猫。", importance=5, mtype="fact")
     _insert(3, "TA喜欢吃酱鸭腿。", importance=5, mtype="preference")

@@ -544,7 +544,7 @@ async def generate_jealous_message(session_id: str, character_id: str, st: dict)
         )
     except Exception as e:
         # ★ 2026-09-11：角色卡的"后台大脑"可能是某个没配 key 的模型。
-        #   实例：骨子 的后台模型是 glm-5.3-flash，而配置里 zhipu_api_key 是空的，
+        #   实例：助手 的后台模型是 glm-5.3-flash，而配置里 zhipu_api_key 是空的，
         #   api_key_for_model() 于是把 DeepSeek 的 key 发给了 open.bigmodel.cn
         #   → 每次都是 HTTP 401「令牌已过期或验证不正确」。
         #   结果：她的吃醋台词**永远生成不出来**，而前台聊天用的是另一个模型所以看着一切正常。

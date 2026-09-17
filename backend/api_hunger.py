@@ -3,7 +3,7 @@
 API 额度拟人化提醒（「她饿了」）。
 
 大脑模型 API 的 token 用完 / key 失效 / 限流时，她无法再生成任何话——
-如果只静默报错，表现就是「骨子突然失踪」。这里用**本地预设台词**（不调 LLM）
+如果只静默报错，表现就是「助手突然失踪」。这里用**本地预设台词**（不调 LLM）
 让她主动冒出来喊饿，告诉你该去喂 API 了。
 
 触发：deepseek_api 在 chat_once / stream_chat 抛 ModelApiError 前调用 schedule()。
@@ -65,8 +65,8 @@ _LINES = {
 
 
 def _active_ids():
-    """当前活跃会话 + 角色（尽力而为，失败回 default/骨子）。"""
-    sid, cid = "default", "骨子"
+    """当前活跃会话 + 角色（尽力而为，失败回 default/助手）。"""
+    sid, cid = "default", "助手"
     try:
         from .main import active_session
         sid = active_session() or sid
@@ -283,7 +283,7 @@ def _recent_chat_lines(sid, cid, limit=6):
 
 
 async def _notify_context_full(sid, est, limit):
-    cid = "骨子"
+    cid = "助手"
     try:
         from . import db as _db
         rows = _db.q("SELECT character_id FROM chat_history WHERE session_id=? "

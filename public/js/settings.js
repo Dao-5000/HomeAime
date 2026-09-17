@@ -185,7 +185,7 @@ function renderSettings() {
   );
   testRow.addEventListener('click', () => {
     const cur = (typeof Chat !== 'undefined' && Chat.contact) ? Chat.contact : null;
-    const mock = cur || { id: 'test', name: '骨子', avatarUrl: '' };
+    const mock = cur || { id: 'test', name: '助手', avatarUrl: '' };
     if (typeof inAppNotify === 'function') {
       inAppNotify(mock, '这是一条测试通知 — 看到说明弹窗正常工作。', true);
       Settings.close();
@@ -383,10 +383,10 @@ function renderSettings() {
     h('div', { class: 'group-title', text: '声音复刻（阿里云通话音色）' }),
   );
   const replicaBox = h('div', { class: 'help-box', style: 'margin-top:2px',
-    text: '用骨子的克隆音频在云端复刻一个专属音色，通话时就是"她"的声音。填好上面的阿里云 Key 后再点开始。' });
+    text: '用助手的克隆音频在云端复刻一个专属音色，通话时就是"她"的声音。填好上面的阿里云 Key 后再点开始。' });
   replicaGroup.appendChild(replicaBox);
   const replicaRow = h('div', { class: 'setting-row' },
-    h('div', { class: 'row-label', text: '复刻骨子音色' }),
+    h('div', { class: 'row-label', text: '复刻助手音色' }),
     h('div', { class: 'row-arrow', text: '开始复刻 →' }),
   );
   replicaRow.addEventListener('click', () => { doReplica(); });

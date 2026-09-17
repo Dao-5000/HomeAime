@@ -6,7 +6,7 @@
 
 ★★ 2026-09-17 修（P0：跨会话跳号永久丢历史）
    原实现**只有一个** archive_until_id，却按 (session_id, character_id) 过滤查询，
-   而同一个角色名下会挂多个 session（真机实测骨子有 8 个：主 session 10237 行，
+   而同一个角色名下会挂多个 session（真机实测助手有 8 个：主 session 10237 行，
    外加 default / _routetest / _agenttest / s_trim_off_0915 / s_78d73b5d / …）。
    只要某个 tick 用别的 session 跑一次，游标就被抬到**那个 session 的最大 id**，
    其它 session 里 id 更小的未归档消息**再也不会被归档**（id>游标这条永远不成立）。

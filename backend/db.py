@@ -1778,7 +1778,7 @@ def update_open_loop(
     """就地更新一条未完成事项（★ 2026-09-11）。
 
     为什么需要它：`extract_open_loops` 原来**只 INSERT 不 UPDATE**，每轮从最近 20 条
-    重新抽取 → 同一件事被反复抽出、互相矛盾、越积越多（实测骨子 513 条 pending，
+    重新抽取 → 同一件事被反复抽出、互相矛盾、越积越多（实测助手 513 条 pending，
     「猫取名」一件事就有 5 条：尚未取名 / 已取名为汤圆 / 需为白猫取名 … 全挂 pending）。
     现在抽取器会带上既有条目让模型认领，命中的走这里更新，而不是再插一条。
 
@@ -1923,11 +1923,11 @@ def get_personality_state(
 
     ★ 2026-09-17 修（双键分叉导致学习写进读不到的那把键）：
       真机实测同一 session 下同时存在两行 ——
-        (s_93ceb989…, '骨子')   ← 人设快照（core_personality/speaking_style）
+        (s_93ceb989…, '助手')   ← 人设快照（core_personality/speaking_style）
         (s_93ceb989…, 'default') ← 反思与反馈写出来的**行为策略**在这行
       两边都在被写（updated_time 都是刚刚），而读侧只按 character_id 精确取一条：
       写进 'default' 的那些学习成果（warmth/humor 偏移、relationship_behavior）
-      在按 '骨子' 读时**完全读不到** —— 约一半的人格学习等于白学。
+      在按 '助手' 读时**完全读不到** —— 约一半的人格学习等于白学。
       根因是有调用方用 character_id='default' 落库（历史遗留的多调用点）。
 
       修法：先精确取；取不到、或取到但没有任何"学到的东西"时，
@@ -3224,7 +3224,7 @@ def list_pending_tasks(character_name: str = None, session_id: str = None, chara
 # ★ 2026-09-16 孤儿定时任务（用户报「提醒不触发」，真机查库定位）
 #   两个真实形状（都在用户库里躺着，attempts=0，永远不会被触发）：
 #     · id=23：character_id='default'（写入时角色名没解析出来），session 是活跃的；
-#     · id=1 ：character_id='骨子'，但 session_id 是**换角色/重启前的旧 session**。
+#     · id=1 ：character_id='助手'，但 session_id 是**换角色/重启前的旧 session**。
 #   原因：调度器一个桶一个实例（scheduler.py:3820-3849），领取用
 #   `list_pending_tasks(session_id=…, character_id=…)`，而它是**两个字段精确匹配**；
 #   而且投递用的是**任务行自己的** session/character（scheduler.py:1911-1921）——
@@ -3320,7 +3320,7 @@ def cancel_task(task_id: int, session_id: str = None, character_id: str = None) 
     """取消一条**尚未触发**的定时任务（软取消：status='cancelled'，不删行）。
 
     ★ 2026-09-17 新增。为什么必须有：
-      真机事故 —— 骨子给自己排了「明天 02:50 提醒睡觉」，用户连说取消**取消不掉**：
+      真机事故 —— 助手给自己排了「明天 02:50 提醒睡觉」，用户连说取消**取消不掉**：
         · 聊天里说「取消」没有任何路径（取消只有 API `/api/pc/task/delete`）；
         · agent 自己的 `cancel_task` 工具只 UPDATE `open_loops`，**根本不碰 tasks 表**。
       两个入口都到不了这里，任务就只能一直 pending。

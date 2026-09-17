@@ -29,7 +29,17 @@
 
 ![陪伴设置](docs/screenshots/02-companion-settings.png)
 
+概览台：关系温度、待办、记忆流与主动陪伴状态。
+
+![概览台](docs/screenshots/03-overview-dashboard.png)
+
+伴侣管理：多角色隔离，每个角色有独立的人设、记忆与关系进度。
+
+![伴侣管理](docs/screenshots/04-companions.png)
+
 ![演示](docs/demo.gif)
+
+> 截图中的角色名、对话内容与统计数据均已打码。
 
 ---
 

@@ -75,7 +75,7 @@ def _ok(b):
 
 def _count_raw_days(archive_dir: Path) -> int:
     try:
-        d = archive_dir / "骨子" / "原文"
+        d = archive_dir / "助手" / "原文"
         if not d.exists():
             # 角色名不固定时：取记忆库里第一个角色目录
             for c in archive_dir.iterdir():
@@ -99,7 +99,7 @@ def _live_index_stats(archive_dir: Path) -> dict:
     try:
         import sqlite3
         # ★ 多角色时选「原文天数最多」的那个，别按字母序取第一个 ——
-        #   实测 'default' 排在 '骨子' 前面，按字母序会读到只有 1 天的空角色库，
+        #   实测 'default' 排在 '助手' 前面，按字母序会读到只有 1 天的空角色库，
         #   报告显示"待补 0 天 ✓"却是错的角色，等于用错样本下结论。
         candidates = []
         for c in (sorted(archive_dir.iterdir()) if archive_dir.exists() else []):

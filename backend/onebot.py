@@ -1080,8 +1080,8 @@ def _handle_user_message(user_id: str, text: str, reply_id: str = ""):
     # 0. 立即推 user 消息到 App（实时显示，不受防抖影响）
     asyncio.create_task(_push_to_app(qq_session_id(), qq_character(), text, role="user"))
     # 0.5 ★ 游戏大脑：无条件尝试推给游戏大脑（不再用 is_mc_command 判断只让"指令"走游戏）。
-    #   骨子在线（ready 且 companion 非空）时，QQ 所有话都走游戏链路 → QQ 和游戏是同一个 AI；
-    #   骨子没上线时 _dispatch_to_game 内部直接 return，由 QQ 主链路兜底普通聊天。
+    #   助手在线（ready 且 companion 非空）时，QQ 所有话都走游戏链路 → QQ 和游戏是同一个 AI；
+    #   助手没上线时 _dispatch_to_game 内部直接 return，由 QQ 主链路兜底普通聊天。
     try:
         asyncio.create_task(_dispatch_to_game(user_id, text))
     except Exception:
@@ -1104,7 +1104,7 @@ async def _dispatch_to_game(user_id: str, text: str):
     try:
         from .minecraft.game_bridge import get_game_brain
         brain = await get_game_brain()
-        # ★ 骨子没上线（MCP 没开 / companion 未召唤）→ 直接返回，主链路兜底普通聊天
+        # ★ 助手没上线（MCP 没开 / companion 未召唤）→ 直接返回，主链路兜底普通聊天
         if brain.ready and brain.companion:
             reply = await brain.handle_qq_command(text)
             if reply:
@@ -1149,7 +1149,7 @@ async def _flush_reply(user_id: str, delay: float = None):
         _pending_tasks.pop(user_id, None)
         if not texts:
             return
-        # ★ 2026-09-07 内置大脑模式：骨子游戏在线时，QQ **聊天**照常走主链路
+        # ★ 2026-09-07 内置大脑模式：助手游戏在线时，QQ **聊天**照常走主链路
         #   （人格+记忆生成），只有明确游戏指令由执行器接手（见 _dispatch_to_game 的
         #   _qq_game_processed 标记）。旧的"在线 → 主链路整个跳过"逻辑已删——
         #   它是给"游戏大脑独占 QQ 回复"的外接模式设计的，现在会让聊天死寂。

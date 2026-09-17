@@ -75,7 +75,7 @@ const PcPTT = (() => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           audio: b64,
-          character_id: (typeof Chat !== 'undefined' && Chat.contact && Chat.contact.name) || '骨子',
+          character_id: (typeof Chat !== 'undefined' && Chat.contact && Chat.contact.name) || '助手',
         }),
       });
       const j = await resp.json();

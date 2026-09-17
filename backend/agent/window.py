@@ -146,7 +146,7 @@ async def _run(task_id: str):
     # 注意：_top_ran 不在这里清 —— 它标记"顶部这条这一轮已跑成"，重试时据此跳过顶部只补队列
     try:
         br = await get_bridge(t["cwd"], _mode_for(t["session_id"]),
-                              patch=PERSONA_OVERLAY,        # ★ R3：必须传，否则她说话不像骨子
+                              patch=PERSONA_OVERLAY,        # ★ R3：必须传，否则她说话不像助手
                               session_id=t["session_id"], character_id=t["character_id"])
         t["config_options"] = list(getattr(br, "config_options", []) or [])
         await br.ensure_session()

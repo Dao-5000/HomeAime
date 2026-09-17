@@ -784,7 +784,7 @@ const Chat = {
     const y = norm(b);
     if (!x || !y) return false;
     if (x === y) return true;
-    // 叠加重复：如 "好好好" 与 "好"，"骨子天下第一可爱" 连发三遍
+    // 叠加重复：如 "好好好" 与 "好"，"助手天下第一可爱" 连发三遍
     const longer = x.length >= y.length ? x : y;
     const shorter = x.length >= y.length ? y : x;
     if (!shorter.length) return false;
@@ -815,7 +815,7 @@ const Chat = {
       const queuedMsg = { id: Store.uid(), role: 'user', ts: Date.now(), status: 'sent', content: text || '[图片]', image: image || undefined, queued: true, reply_to: quoteForThis || undefined };
       queued.messageId = queuedMsg.id;
 
-      // ★ 连发相同内容合并：用户连发多条一样的话（如"骨子天下第一可爱"×3）通常是加重
+      // ★ 连发相同内容合并：用户连发多条一样的话（如"助手天下第一可爱"×3）通常是加重
       //   语气，不该让 AI 分别回答三遍。队尾已有同一意图的内容时并入它，只发一次请求。
       //   内容不同的多条仍会分别入队，保留"挨个回复"的手感。
       const _lastQueued = this.pendingSends[this.pendingSends.length - 1];
@@ -1934,7 +1934,7 @@ function _ensureAgentTrail(body) {
   const card = h('div', { class: 'agent-trail' });
   const head = h('div', { class: 'agent-trail-head' });
   head.appendChild(h('span', { class: 'agent-trail-dot' }));
-  head.appendChild(h('span', { class: 'agent-trail-title', text: '骨子正在帮你做事' }));
+  head.appendChild(h('span', { class: 'agent-trail-title', text: '助手正在帮你做事' }));
   head.appendChild(h('span', { class: 'agent-trail-status', text: '进行中' }));
   head.appendChild(h('span', { class: 'agent-trail-toggle', text: '收起' }));
   const trailBody = h('div', { class: 'agent-trail-body' });

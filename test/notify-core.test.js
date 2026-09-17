@@ -66,11 +66,11 @@ test('触发: 全局 DND 中普通通知不弹', () => {
 /* ============ 2) 头像逻辑（仅 AI 聊天对象显示图片头像）============ */
 test('头像: AI 聊天对象 + 头像URL → 图片头像', () => {
   assert.deepStrictEqual(
-    NC.resolveAvatar({ name: '骨子', avatar: 'http://x/a.png', isAI: true }),
+    NC.resolveAvatar({ name: '助手', avatar: 'http://x/a.png', isAI: true }),
     { mode: 'img', value: 'http://x/a.png' });
   // 主动消息默认视为 AI（isAI 未传）→ 仍显示图片
   assert.deepStrictEqual(
-    NC.resolveAvatar({ name: '骨子', avatar: 'http://x/a.png' }),
+    NC.resolveAvatar({ name: '助手', avatar: 'http://x/a.png' }),
     { mode: 'img', value: 'http://x/a.png' });
 });
 
@@ -81,12 +81,12 @@ test('头像: 非 AI 类型即使有头像也回退文字（修复点）', () =>
 });
 
 test('头像: 无头像 → 文字首字；默认回退 AI', () => {
-  assert.deepStrictEqual(NC.resolveAvatar({ name: '骨子' }), { mode: 'text', value: '骨' });
+  assert.deepStrictEqual(NC.resolveAvatar({ name: '助手' }), { mode: 'text', value: '骨' });
   assert.deepStrictEqual(NC.resolveAvatar({}), { mode: 'text', value: 'A' });
 });
 
 test('头像: 空字符串头像 → 文字', () => {
-  assert.deepStrictEqual(NC.resolveAvatar({ name: '骨子', avatar: '' }), { mode: 'text', value: '骨' });
+  assert.deepStrictEqual(NC.resolveAvatar({ name: '助手', avatar: '' }), { mode: 'text', value: '骨' });
 });
 
 /* ============ 3) 免打扰（Do Not Disturb）============ */

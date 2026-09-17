@@ -9,7 +9,7 @@
     → wait_for_approval() 轮询等待用户决定
     → 同意：执行；取消：记录被拒原因（供反馈闭环），终止该步
 
-被拒不是终点：reject 时会把"被拒原因"交给 memory.py，让骨子像真人一样
+被拒不是终点：reject 时会把"被拒原因"交给 memory.py，让助手像真人一样
 追问"哪里不合适"，并记进改造记忆，下次换个方式。
 """
 import asyncio
@@ -106,7 +106,7 @@ def reject(aid: str, reason: str = "") -> bool:
     """取消授权，记录原因。返回是否成功。"""
     ok = _resolve(aid, "rejected", reason)
     if ok:
-        # 被拒反馈：交给 memory.py 记录，供骨子追问/反思
+        # 被拒反馈：交给 memory.py 记录，供助手追问/反思
         try:
             from . import memory as _mem
             a = _pending.get(aid)

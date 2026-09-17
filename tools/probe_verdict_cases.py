@@ -32,7 +32,7 @@ async def main():
     from datetime import datetime
     for u, a in CANDIDATES:
         try:
-            v = await ap.extract_reminder_verdict(u, ai_reply=a, character_id="骨子")
+            v = await ap.extract_reminder_verdict(u, ai_reply=a, character_id="助手")
         except Exception as e:
             print(f"\n用户={u!r} → 调用异常 {type(e).__name__}: {e}")
             continue

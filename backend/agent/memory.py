@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-改造记忆 —— 骨子"自我改造"的记忆系统。
+改造记忆 —— 助手"自我改造"的记忆系统。
 
 记录两类事：
   · done：成功执行过的改造（写文件/执行命令）
   · rejected：被用户取消的改造（含被拒原因）
 
 用途：
-  1. 注入 prompt，让骨子记住"我改过什么、被拒过什么"，避免重复犯错；
-  2. 被拒后生成"好奇追问"提示，让骨子像真人一样问为什么、反思、下次换方式。
+  1. 注入 prompt，让助手记住"我改过什么、被拒过什么"，避免重复犯错；
+  2. 被拒后生成"好奇追问"提示，让助手像真人一样问为什么、反思、下次换方式。
 """
 import json
 import time
@@ -56,7 +56,7 @@ def record_rejection(session_id: str, character_id: str, tool: str,
     """记录一次被取消的改造（含被拒原因）。"""
     # ★ R36（Task 5 复评发现）：桥被 stop() 时会把还挂着的待批审批全部判拒，reason 是「桥已停止」
     #   （见 acp_bridge._settle_pending）。那不是"他拒绝了我"，而是关窗口/收起升档的连带结算 ——
-    #   记进来会让骨子下次拿一条假的"被拒历史"去追问，所以这里直接丢掉。
+    #   记进来会让助手下次拿一条假的"被拒历史"去追问，所以这里直接丢掉。
     if str(reason or "").startswith("桥已停止"):
         return
     try:
@@ -73,7 +73,7 @@ def get_recent(session_id: str, character_id: str, limit: int = 10) -> list:
 
 
 def build_memory_block(session_id: str, character_id: str) -> str:
-    """改造记忆注入块 —— 让骨子记住自己的改造历史。"""
+    """改造记忆注入块 —— 让助手记住自己的改造历史。"""
     data = _load(session_id, character_id)
     if not data:
         return ""
@@ -88,7 +88,7 @@ def build_memory_block(session_id: str, character_id: str) -> str:
 
 
 def build_rejection_prompt(session_id: str, character_id: str) -> str:
-    """被拒后的追问提示 —— 让骨子像真人一样好奇地问一句，而不是沉默或反复道歉。"""
+    """被拒后的追问提示 —— 让助手像真人一样好奇地问一句，而不是沉默或反复道歉。"""
     data = _load(session_id, character_id)
     rejected = [x for x in data if x.get("type") == "rejected"]
     if not rejected:

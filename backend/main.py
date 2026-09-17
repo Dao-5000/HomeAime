@@ -292,7 +292,7 @@ async def lifespan(app):
         _sb = await get_stardew_brain()
         if _sb is not None:
             print(f"[StardewBrain] 星露谷陪伴执行器已启动（ready={_sb.ready}，"
-                  f"游戏开着加载存档后骨子自动进农场）", flush=True)
+                  f"游戏开着加载存档后助手自动进农场）", flush=True)
         else:
             print("[StardewBrain] 未启用（STARDEW_ENABLED/STARDEW_MCP_SERVER 未配置），跳过", flush=True)
     except Exception as _sb_err:
@@ -392,8 +392,8 @@ except Exception as _mce:
 
 # ★ OpenAI 兼容接口（供 Numen 等第三方客户端对接）
 #   Numen 用它自己的 system prompt（游戏上下文/工具格式），这里在 system 里
-#   追加原项目的人格，让游戏里的 AI 是"骨子"本人，同时保留 Numen 的工具指令。
-#   用法：Numen 里填地址 http://127.0.0.1:32123/v1/chat/completions?character=骨子
+#   追加原项目的人格，让游戏里的 AI 是"助手"本人，同时保留 Numen 的工具指令。
+#   用法：Numen 里填地址 http://127.0.0.1:32123/v1/chat/completions?character=助手
 @app.post("/v1/chat/completions")
 async def openai_chat_completions(request: Request):
     import time as _time
@@ -410,7 +410,7 @@ async def openai_chat_completions(request: Request):
     if not messages:
         return JSONResponse({"error": {"message": "no messages", "type": "invalid_request_error"}}, status_code=400)
 
-    # 角色名解析顺序：query 参数 > QQ_CHARACTER（设置里指定的主力角色，如"骨子"）>
+    # 角色名解析顺序：query 参数 > QQ_CHARACTER（设置里指定的主力角色，如"助手"）>
     # 项目第一个角色。之前直接取 list_characters()[0]（按 mtime 排序），
     # 可能取到内置角色（qin_heye 等）而不是你的自建角色。
     character = str(request.query_params.get("character") or request.query_params.get("character_id") or "").strip()
@@ -427,7 +427,7 @@ async def openai_chat_completions(request: Request):
         except Exception:
             character = "default"
 
-    # ★ 模型取用：跟随角色卡大脑（骨子在 App 资料页「AI 大脑」里配的模型），
+    # ★ 模型取用：跟随角色卡大脑（助手在 App 资料页「AI 大脑」里配的模型），
     #   没单独配就回落全局。这样 App 里切换大脑，游戏里同步生效。
     #   忽略外部传的 model（Numen 里常填默认 deepseek-chat），否则会误用失效 key。
     try:
@@ -436,7 +436,7 @@ async def openai_chat_completions(request: Request):
     except Exception:
         model = config.selected_model()
 
-    # ★ session 统一：复用骨子在 App/QQ 里的同一个 session，实现记忆互通。
+    # ★ session 统一：复用助手在 App/QQ 里的同一个 session，实现记忆互通。
     #   （QQ 也是这么做的：QQ_SESSION_ID 优先，否则取该角色最新 session）
     try:
         from . import db as _db
@@ -554,7 +554,7 @@ async def openai_chat_completions(request: Request):
     except Exception as _emo_err:
         print(f"[NumenOpenAI] 情绪注入失败: {_emo_err}", flush=True)
 
-    # ★ 时间感知：游戏里的骨子也知道现实时间（夜猫子情境/早晚问候才对得上）。
+    # ★ 时间感知：游戏里的助手也知道现实时间（夜猫子情境/早晚问候才对得上）。
     #   夜间占比用 10 分钟缓存（引擎决策调用频繁，别每次都聚合 chat_history）。
     try:
         from datetime import datetime as _dtime
@@ -846,7 +846,7 @@ async def stardew_command(body: dict):
             return {"ok": False, "error": "星露谷模块未启用（需配置 STARDEW_ENABLED 与 MCP Server）"}
         if not brain._game_online:
             return {"ok": False, "game_online": False,
-                    "error": "星露谷未启动：用 SMAPI 启动游戏并加载存档后，骨子才会进农场"}
+                    "error": "星露谷未启动：用 SMAPI 启动游戏并加载存档后，助手才会进农场"}
         reply = await brain.handle_qq_command(text)
         return {"ok": True, "reply": reply, "companion": brain.companion}
     except Exception as e:
@@ -866,14 +866,14 @@ async def stardew_launch():
             return {"ok": False, "error": "未找到 StardewModdingAPI.exe，请在 config.json 的 STARDEW_GAME_PATH 填绝对路径"}
         import os
         os.startfile(exe)   # 等价双击：SMAPI 控制台 + 游戏窗口
-        return {"ok": True, "exe": exe, "message": "星露谷启动中（SMAPI），加载存档后骨子自动进农场"}
+        return {"ok": True, "exe": exe, "message": "星露谷启动中（SMAPI），加载存档后助手自动进农场"}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
 
-# ★ 启动骨子的游戏实例（真联机 client 模式，第二实例）：
+# ★ 启动助手的游戏实例（真联机 client 模式，第二实例）：
 #   用户流程：① 自己 Steam 开游戏读档并主持联机 ② 点 App 按钮 → 这里拉起第二个游戏
-#   ③ 骨子实例标题界面「协作→加入」（列表空用直接 IP 127.0.0.1）走进联机小屋
+#   ③ 助手实例标题界面「协作→加入」（列表空用直接 IP 127.0.0.1）走进联机小屋
 @app.post("/api/stardew/launch_client")
 async def stardew_launch_client():
     def _count_game_procs() -> int:
@@ -899,17 +899,17 @@ async def stardew_launch_client():
         from .stardew.game_bridge import find_game_exe
         n = _count_game_procs()
         if n == 0:
-            return {"ok": False, "error": "还没检测到星露谷进程：先完成第 1 步——Steam 启动游戏、读档、Esc→协作→主持联机，再来拉骨子的实例"}
+            return {"ok": False, "error": "还没检测到星露谷进程：先完成第 1 步——Steam 启动游戏、读档、Esc→协作→主持联机，再来拉助手的实例"}
         exe = find_game_exe()
         if not exe:
             return {"ok": False, "error": "未找到 StardewModdingAPI.exe，请在 config.json 的 STARDEW_GAME_PATH 填绝对路径"}
         if n >= 2:
             return {"ok": True, "already": True,
-                    "message": "已检测到两个游戏实例——骨子的实例应该已经开着，去它的标题界面「协作→加入」即可"}
+                    "message": "已检测到两个游戏实例——助手的实例应该已经开着，去它的标题界面「协作→加入」即可"}
         import os
         os.startfile(exe)
         return {"ok": True, "exe": exe,
-                "message": "骨子的游戏实例启动中（第 2 步完成）：等它弹出标题界面后，点「协作→加入」进你的农场（列表空就用直接 IP 127.0.0.1）"}
+                "message": "助手的游戏实例启动中（第 2 步完成）：等它弹出标题界面后，点「协作→加入」进你的农场（列表空就用直接 IP 127.0.0.1）"}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
@@ -947,7 +947,7 @@ async def pc_voice_control(request: Request):
         return {"ok": False, "error": "请求格式错误"}
     audio_b64 = str(body.get("audio") or "")
     session_id = str(body.get("session_id") or active_session() or "default")
-    _cid = str(body.get("character_id") or "骨子")
+    _cid = str(body.get("character_id") or "助手")
     if not audio_b64:
         return {"ok": False, "error": "没有音频"}
     import base64 as _b64mod
@@ -2536,7 +2536,7 @@ async def api_agent_approval_approve(aid: str):
 
 @app.post("/api/agent/approval/{aid}/reject")
 async def api_agent_approval_reject(aid: str, request: Request):
-    """用户取消这次危险操作（可带原因，供骨子追问/反思）。"""
+    """用户取消这次危险操作（可带原因，供助手追问/反思）。"""
     try:
         body = await request.json()
     except Exception:
@@ -2549,7 +2549,7 @@ async def api_agent_approval_reject(aid: str, request: Request):
 
 @app.post("/api/agent/goal")
 async def api_agent_goal_create(request: Request):
-    """记录一个目标（骨子之后主动推进、提醒进度）。"""
+    """记录一个目标（助手之后主动推进、提醒进度）。"""
     try:
         body = await request.json()
     except Exception:
@@ -2637,7 +2637,7 @@ def _resolve_char_id(cid, cname=""):
     """
     统一人格隔离键解析（全后端记忆/调度/来电共用）：
     - character_id 能映射到真实角色配置才优先使用（前端传的 localStorage UUID 会被跳过）
-    - 否则用 character_name（角色名，如「骨子」，对应 角色配置/骨子.config.json）
+    - 否则用 character_name（角色名，如「助手」，对应 角色配置/助手.config.json）
     - 最后兜底 default
     保证「同一个联系人名字 = 同一个隔离键」，记忆读写不串桶。
     """
@@ -2856,7 +2856,7 @@ async def run_learning_signals(session_id, character_id, user_text, recent_ai_te
         纯文字聊天永远学不到（AST 取证 main.py:8156 被 has_image 包着）。
       · 规矩沉淀（"以后别半夜问我睡没睡"→ learned_rules）原先**只有 agent 工具**
         一个写入口，而工具只在助手模式的 agent 循环里跑 —— 日常聊天里立的规矩
-        没有任何路径被记住（真机 learned_rules/骨子.json 恒为 `[]`）。
+        没有任何路径被记住（真机 learned_rules/助手.json 恒为 `[]`）。
       两件事的触发条件、成本模型、失败处理完全一样，合并成一个入口，
       文字/图片/QQ 哪条路径调用都不会漏。
 
@@ -2940,7 +2940,7 @@ async def api_chat(request: Request):
     # ★ 多session v2.0：session_id 优先取请求参数，兼容老前端回退 active_session()
     session = str(body.get("session_id") or active_session() or "default").strip() or "default"
     # ★ 统一人格隔离键（读上下文/写历史/写记忆/调度/来电全部用它）：
-    #   前端 /api/chat 只发 character_name（角色名如"骨子"），此处解析后即角色名，
+    #   前端 /api/chat 只发 character_name（角色名如"助手"），此处解析后即角色名，
     #   保证 enrich_messages 读、count_round/add_message/maybe_auto_extract 写落在同一隔离键。
     _cid = _resolve_char_id(body.get("character_id"), body.get("character_name"))
     # ★ 2026-09-17：非流式入口也接上学习信号（风格反馈 + 规矩沉淀）。
@@ -4028,7 +4028,7 @@ def pc_config_payload(character_id: str = "") -> dict:
 
     ★ 2026-09-14：新增 character_id 参数 —— 主动消息时段是**角色级**配置
       （角色卡 active_hours），要算准就得知道是哪个角色。
-      /api/pc/config?character_id=骨子 即可拿到该角色的实际时段；不传则给全局默认。
+      /api/pc/config?character_id=助手 即可拿到该角色的实际时段；不传则给全局默认。
     """
     cfg = config.get_all()
     _pc_cfg_character_id = str(character_id or "").strip()
@@ -6868,7 +6868,7 @@ def _mcp_tool_defs() -> list:
          "inputSchema": {"type": "object", "properties": {
              "action": {"type": "string", "description": "要执行的指令描述（如 打开抖音/开启专注模式）"},
          }, "required": ["action"]}},
-        # ── 开发者工具：骨子像开发搭档一样改自己的代码 ──
+        # ── 开发者工具：助手像开发搭档一样改自己的代码 ──
         {"name": "dev_read_file",
          "description": "读项目源码文件（.py/.js/.md；禁止 data/venv/config.json 等敏感路径）",
          "inputSchema": {"type": "object", "properties": {
@@ -6940,7 +6940,7 @@ async def _mcp_tool_call(name: str, args: dict) -> str:
         from . import ios_bridge as _ios
         _r = await _ios.send_remote_cmd(str(args.get("action") or ""), str(args.get("payload") or ""))
         return "已把指令发到主人的 iPhone（邮件触发，1~2 分钟内执行）" if _r.get("ok") else f"触发失败：{_r.get('error', '')[:80]}"
-    # ── 开发者工具（骨子改自己的代码；devtools 内置路径白名单/git 快照/命令白名单）──
+    # ── 开发者工具（助手改自己的代码；devtools 内置路径白名单/git 快照/命令白名单）──
     if name == "dev_read_file":
         from . import devtools
         return devtools.read_file(str(args.get("path") or ""))
@@ -8276,7 +8276,7 @@ async def api_chat_stream(request: Request):
     #     （AST 取证：原 main.py:8156 被 has_image 包着），而它是全项目**唯一**的
     #     调用点 —— 于是纯文字聊天**永远不学习风格偏好**。症状：用户反复批评
     #     "别讲道理/别敷衍"，AI 行为毫无变化；日志里 `[StyleFeedback]` 命中 0 次、
-    #     kv 里 `style_feedback:*` 0 个；`learned_rules/骨子.json` 恒为 `[]`。
+    #     kv 里 `style_feedback:*` 0 个；`learned_rules/助手.json` 恒为 `[]`。
     #     现在提到 has_image 之前，且文字/图片两条路径共用同一个入口。
     await run_learning_signals(session_id, character_id or "default", user_text or "")
 

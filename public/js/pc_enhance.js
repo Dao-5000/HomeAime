@@ -964,7 +964,7 @@ const PCEnhance = {
   },
 
   openMemPasteSheet() {
-    const nameInput = h('input', { type: 'text', placeholder: '文件名（如：骨子设定）', value: '' });
+    const nameInput = h('input', { type: 'text', placeholder: '文件名（如：助手设定）', value: '' });
     const ta = h('textarea', { placeholder: '粘贴长篇内容…会存为磁盘文件，聊天时整体注入', style: 'min-height:200px' });
     const form = h('div', {},
       field('文件名', nameInput),
@@ -1315,7 +1315,7 @@ const PCEnhance = {
         <div style="display:flex;gap:12px;margin-bottom:12px;">
           <div style="flex:1;">
             <label style="display:block;font-size:12px;color:#999;margin-bottom:4px;">角色名称 *</label>
-            <input id="pc-char-name" value="${cfg.character_name || ''}" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;" placeholder="例如：骨子、星尘" onfocus="this.style.borderColor='#4a90d9'" onblur="this.style.borderColor='#e0e0e0'">
+            <input id="pc-char-name" value="${cfg.character_name || ''}" style="width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;" placeholder="例如：助手、星尘" onfocus="this.style.borderColor='#4a90d9'" onblur="this.style.borderColor='#e0e0e0'">
           </div>
           <div style="flex:1;">
             <label style="display:block;font-size:12px;color:#999;margin-bottom:4px;">自称</label>

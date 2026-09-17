@@ -829,7 +829,7 @@ DEFAULTS = {
     #   mcp-server/ 下 `npm install && npm run build`；
     # 3) 把 mcp-server/build/index.js 的绝对路径填到 STARDEW_MCP_SERVER，
     #    STARDEW_ENABLED 改 true，重启后端。
-    # 游戏开着加载存档后，骨子会自动生成同伴进农场，QQ 可遥控（浇水/收菜/钓鱼/挖矿/跟随）。
+    # 游戏开着加载存档后，助手会自动生成同伴进农场，QQ 可遥控（浇水/收菜/钓鱼/挖矿/跟随）。
     "STARDEW_ENABLED": False,
     # ★ 真联机模式（推荐）：true = 走 StardewClient（控制第二个游戏实例里的真 farmhand，
     #   可被交互/送结婚戒指）；false = 走 StardewMCPBridge 的 NPC 影子同伴（不可交互）。
@@ -849,7 +849,7 @@ DEFAULTS = {
     "STARDEW_BRIDGE_PATH": "",
     "STARDEW_ACTION_DIR": "",
     # ★ 游戏脑（真联机模式）：让 LLM 看着农场环境自主操作（观察→决策→发低级动作）。
-    #   关掉后骨子只跑 mod 内置脚本状态机（会砍不到树、不会种地卖货那套微操）。
+    #   关掉后助手只跑 mod 内置脚本状态机（会砍不到树、不会种地卖货那套微操）。
     "STARDEW_GAME_BRAIN": True,
     # 两次游戏脑决策的最小间隔秒数（动作队列没跑完不会提前决策）
     "STARDEW_GAME_BRAIN_INTERVAL": 15,

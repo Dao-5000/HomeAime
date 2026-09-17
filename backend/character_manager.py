@@ -627,7 +627,7 @@ def build_system_prompt(name: str, character_id: str = "default", session_id: st
             result += _couple_mode_block(char)
             return result
 
-    # —— legacy 原逻辑（default/骨子 若无 json 也走这，返回 "" 则由 companion 层补）——
+    # —— legacy 原逻辑（default/助手 若无 json 也走这，返回 "" 则由 companion 层补）——
     cfg = get_character(name)
     if not cfg:
         return ""

@@ -87,7 +87,7 @@ def _build_system(task: str, session_id: str, character_id: str,
         "6. TA 说「以后/从今天起/记住每次都要…」这类长期约定时，用 learn_rule 把它沉淀成自己的积木；"
         "答应 TA 到点做某事后，用 schedule_task 把约定固化成任务。",
     ]
-    # ★ 2026-09-11 自我进化积木：骨子自己沉淀的习惯/规则，Agent 模式同样常驻
+    # ★ 2026-09-11 自我进化积木：助手自己沉淀的习惯/规则，Agent 模式同样常驻
     try:
         from .self_modules import learned_rules_block
         _lr_block = learned_rules_block(character_id)

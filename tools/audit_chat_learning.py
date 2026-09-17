@@ -15,7 +15,7 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 DATA = Path(os.environ["APPDATA"]) / "HomeAime" / "data"
 DB = DATA / "local_db.db"
-SESS, CHAR = "s_93ceb989b56d9ea9a5835a03", "骨子"
+SESS, CHAR = "s_93ceb989b56d9ea9a5835a03", "助手"
 
 con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 con.row_factory = sqlite3.Row

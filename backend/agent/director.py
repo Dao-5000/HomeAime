@@ -2,7 +2,7 @@
 """导演脑 —— 伴侣作为「前台 + 导演」的判定与话术层。
 
 分工（spec §1.2）：
-  · 导演（本模块）：听懂、判断聊天还是要干活、出计划卡、把结果转述成骨子的话
+  · 导演（本模块）：听懂、判断聊天还是要干活、出计划卡、把结果转述成助手的话
   · 手（DSH）：拿到明确任务后自己规划多步执行，不经过本模块
 判定刻意用规则而不是 LLM：可测、可解释、不花钱；含糊时偏向"聊天"（宁漏判不误判）。
 """
@@ -113,7 +113,7 @@ def build_brief(user_text: str, plan: dict, *, character_name: str, call_user: s
                 cwd: str, memories: str = "") -> str:
     """拼成给 harness 的任务 brief。记忆与人设进 prompt，因为手的系统提示词是固定的。"""
     lines = [
-        "【你是谁】你是「%s」，%s 的伴侣，现在用双手（工具）替 %s 干活。" % (character_name or "骨子", call_user or "你", call_user or "你"),
+        "【你是谁】你是「%s」，%s 的伴侣，现在用双手（工具）替 %s 干活。" % (character_name or "助手", call_user or "你", call_user or "你"),
         "【工作目录】%s —— 只在这个工作区（含子目录）里干活；要动工作区外面先申请，不要自己想办法绕。" % cwd,
         "【任务】%s" % str(user_text or "").strip(),
     ]
@@ -151,7 +151,7 @@ def is_agent_row(extra) -> bool:
 
 async def narrate_result(raw_text: str, *, character_id: str, session_id: str,
                          character_name: str = "", call_user: str = "你") -> str:
-    """把 harness 的产出转述成骨子的一句话（失败就退回原文，绝不为空）。"""
+    """把 harness 的产出转述成助手的一句话（失败就退回原文，绝不为空）。"""
     raw = str(raw_text or "").strip()
     fallback = raw[:200] if raw else "这一步我做完了，但没整理出话来说，你看看结果。"
     try:
@@ -167,7 +167,7 @@ async def narrate_result(raw_text: str, *, character_id: str, session_id: str,
             "----\n%s\n----\n"
             "请用你自己的口吻向 %s 汇报：先说结论，再说你动了什么/验证了什么，"
             "20~60 字，口语、自然，不要 markdown、不要列表、不要括号动作描写。"
-            % (character_name or "骨子", call_user, call_user, raw[:2000], call_user)
+            % (character_name or "助手", call_user, call_user, raw[:2000], call_user)
         )
         out = await chat_once(model, [{"role": "user", "content": prompt}], key,
                               temperature=0.8, max_tokens=160)

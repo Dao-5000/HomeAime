@@ -242,7 +242,7 @@ def companion_mode(session_id: str = "default", character_id: str = "default"):
     """读取当前生活陪伴模式（kv）。返回 (mode, label)，未开启返回 ("", "")。
 
     ★ 身份对齐兜底：App 前端未打开聊天时，会以 character_id='default' 存陪伴模式，
-      而 QQ 链路读的是具体角色名（如「骨子」），两者对不上会导致 QQ 读不到陪伴模式。
+      而 QQ 链路读的是具体角色名（如「助手」），两者对不上会导致 QQ 读不到陪伴模式。
       这里按顺序尝试：精确键 → 仅 session（旧版）→ default 角色键。
     """
     try:

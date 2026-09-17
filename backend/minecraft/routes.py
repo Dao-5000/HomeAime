@@ -30,7 +30,7 @@ def _ctrl(body=None, session_id=None, character_id=None):
 async def bot_bind(body: Dict[str, Any]):
     """生活页选择 Minecraft 时，把 Bot 绑定到当前 session + 角色，并自动启动 bot。
 
-    根据当前角色名生成拼音用户名（MC 不允许中文，如"骨子"→"guzi"），
+    根据当前角色名生成拼音用户名（MC 不允许中文，如"助手"→"guzi"），
     从 body 拿局域网端口，用 subprocess 拉起 minecraft_bot，
     实现「APP 内一键让 AI 人格进游戏」，而非手动跑一个独立 bot。
     """

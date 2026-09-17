@@ -1052,7 +1052,7 @@ async function proactiveTick(opts) {
       if (now < (Number(c.proactiveFailUntil) || 0)) return false;
       if (isInQuiet(c)) return false;
       // ★ 2026-09-15：**按这个候选人自己的角色时段**过滤（以前只查全局时段，
-      //   于是"骨子 20:00-01:44"在候选路径完全不生效：白天照样挑中她、
+      //   于是"助手 20:00-01:44"在候选路径完全不生效：白天照样挑中她、
       //   照样生成 42k 上下文的主动消息，生成完才被后端 register 拦下）。
       if (!inActiveWindow(c.activeHours || _fallbackHours)) return false;
       return true;

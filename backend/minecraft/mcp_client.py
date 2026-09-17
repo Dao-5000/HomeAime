@@ -6,7 +6,7 @@ Numen（minecraft-numen）在游戏客户端跑一个 MCP server，默认监听
 http://127.0.0.1:8765/mcp（HTTP streamable，非 stdio）。
 
 本模块实现最小 MCP 客户端：initialize → tools/list → tools/call，
-用于后端作为「外接大脑」驱动游戏内的 AI 同伴（骨子）。
+用于后端作为「外接大脑」驱动游戏内的 AI 同伴（助手）。
 
 协议要点（MCP streamable HTTP）：
   - 单一 POST 端点，JSON-RPC 2.0

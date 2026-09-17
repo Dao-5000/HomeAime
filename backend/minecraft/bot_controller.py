@@ -63,7 +63,7 @@ def is_mc_command(text: str, active_context: bool = False) -> bool:
 def _to_pinyin(name: str) -> str:
     """中文角色名 → MC 合法用户名（拼音小写）。
 
-    MC 用户名只允许 A-Z a-z 0-9 _，中文名（如"骨子"）会被服务端以
+    MC 用户名只允许 A-Z a-z 0-9 _，中文名（如"助手"）会被服务端以
     "Invalid characters in username" 拒绝，因此转成拼音（guzi）。
     若名字本身已是合法 ASCII 名则原样返回。
     """
@@ -134,7 +134,7 @@ def start_bot_process(username: str, port: int, host: str = "127.0.0.1") -> bool
 
     try:
         # ★ bot.js 的 stdout/stderr 落到 minecraft_bot 目录下的日志，
-        #   否则连 MC 失败（ECONNREFUSED）时完全看不到，只能靠"骨子返回空"猜。
+        #   否则连 MC 失败（ECONNREFUSED）时完全看不到，只能靠"助手返回空"猜。
         subprocess.Popen(
             ["node", "bot.js"],
             cwd=_mb_dir,

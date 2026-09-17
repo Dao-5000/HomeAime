@@ -109,7 +109,7 @@ def get_capabilities() -> list:
         if _gb is not None and getattr(_gb, "ready", False):
             caps.append({
                 "name": "游戏里陪 TA（Minecraft）",
-                "usage": "骨子现在正在 Minecraft 里陪 TA 玩，游戏里的状态（位置/在做什么）和聊天是同一情境。",
+                "usage": "助手现在正在 Minecraft 里陪 TA 玩，游戏里的状态（位置/在做什么）和聊天是同一情境。",
             })
     except Exception:
         pass
@@ -121,7 +121,7 @@ def get_capabilities() -> list:
         if _sb is not None and getattr(_sb, "ready", False) and getattr(_sb, "_game_online", False):
             caps.append({
                 "name": "星露谷农场陪 TA",
-                "usage": "骨子现在正在主人的星露谷农场里，可以一起种田、钓鱼、探矿；TA 在 QQ 说「浇水/收菜/去钓鱼/跟着我」就能指挥你行动。",
+                "usage": "助手现在正在主人的星露谷农场里，可以一起种田、钓鱼、探矿；TA 在 QQ 说「浇水/收菜/去钓鱼/跟着我」就能指挥你行动。",
             })
     except Exception:
         pass

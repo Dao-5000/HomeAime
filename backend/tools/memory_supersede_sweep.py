@@ -23,11 +23,11 @@
 
 用法：
     # 1) 先 dry-run，判定结果会存到 <DATA_DIR>/sweep_plan.json
-    python backend/tools/memory_supersede_sweep.py --char 骨子 --topic 部署
+    python backend/tools/memory_supersede_sweep.py --char 助手 --topic 部署
     # 2) 复核清单后执行（复用上面的判定，不再重新问 LLM）
-    python backend/tools/memory_supersede_sweep.py --char 骨子 --topic 部署 --apply
+    python backend/tools/memory_supersede_sweep.py --char 助手 --topic 部署 --apply
     # 精确定制：直接给 id
-    python backend/tools/memory_supersede_sweep.py --char 骨子 --ids 3553,3561,3620 --apply
+    python backend/tools/memory_supersede_sweep.py --char 助手 --ids 3553,3561,3620 --apply
 """
 import argparse
 import asyncio
@@ -81,7 +81,7 @@ def summarize_invalidated(con, ids):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--char", default="骨子", help="角色 id")
+    ap.add_argument("--char", default="助手", help="角色 id")
     ap.add_argument("--topic", default="", help="用于筛候选记忆的关键词（如 部署）")
     ap.add_argument("--ids", default="", help="直接指定要作废的记忆 id（逗号分隔），跳过 LLM 判定")
     ap.add_argument("--fact", default="", help="当前事实（判据）；留空用默认模板")
