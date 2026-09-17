@@ -1,0 +1,175 @@
+/* ============================================================
+   Homeaime · Flow UI v9（flow-ui.css）
+   1) ⌘K 命令面板
+   2) 记忆页「记忆流」重构
+   3) 浅色主题（月亮按钮真正生效）
+   回滚：删掉 index.html 里对本文件的引用即可。
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. ⌘K 命令面板
+   ------------------------------------------------------------ */
+#hzPaletteMask {
+  position: fixed; inset: 0; z-index: 400; display: none;
+  background: rgba(8, 4, 16, .55); backdrop-filter: blur(6px);
+}
+#hzPaletteMask.on { display: block; animation: hzFade .18s ease both; }
+#hzPalette {
+  position: fixed; z-index: 401; left: 50%; top: 14vh; transform: translateX(-50%);
+  width: min(620px, 92vw); max-height: 66vh; display: none; flex-direction: column;
+  border-radius: 22px; overflow: hidden;
+  background: rgba(26, 23, 35, .96); border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 40px 90px rgba(5, 2, 12, .7), inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+#hzPalette.on { display: flex; animation: hzPalIn .22s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes hzFade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes hzPalIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(.98) } to { opacity: 1; transform: translateX(-50%) } }
+.hz-pal-in {
+  display: flex; align-items: center; gap: 10px; padding: 15px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.hz-pal-in svg { width: 17px; height: 17px; flex: none; color: var(--rose, #FF8FA8); }
+.hz-pal-in input {
+  flex: 1; background: transparent !important; border: 0 !important; outline: none;
+  color: var(--text, #F4F1F8) !important; font-size: 15px; padding: 0 !important; min-height: 0 !important;
+}
+.hz-pal-in kbd {
+  font-size: 10px; padding: 3px 7px; border-radius: 6px; color: var(--text-sub, #A99FB6);
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1);
+}
+.hz-pal-list { overflow-y: auto; padding: 8px; }
+.hz-pal-sec {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--text-sub, #A99FB6); padding: 10px 12px 6px;
+}
+.hz-pal-it {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 13px;
+  cursor: pointer; color: var(--text, #F4F1F8); font-size: 13.5px;
+  transition: background .15s, transform .15s;
+}
+.hz-pal-it:hover, .hz-pal-it.sel { background: rgba(255, 143, 168, .14); }
+.hz-pal-it:active { transform: scale(.985); }
+.hz-pal-it .pi {
+  width: 30px; height: 30px; flex: none; border-radius: 10px; display: flex;
+  align-items: center; justify-content: center; font-size: 15px;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .07);
+  color: var(--rose, #FF8FA8);
+}
+.hz-pal-it .pi svg { width: 16px; height: 16px }
+.hz-pal-it .pt { flex: 1; min-width: 0 }
+.hz-pal-it .pk { font-size: 10.5px; color: var(--text-sub, #A99FB6) }
+.hz-pal-empty { padding: 26px; text-align: center; color: var(--text-sub, #A99FB6); font-size: 13px }
+
+/* ------------------------------------------------------------
+   2. 记忆页 → 记忆流（时间脊柱 + 节点 + 逐条浮现）
+   ------------------------------------------------------------ */
+.mem-hero {
+  position: relative; overflow: hidden; border-radius: 22px; padding: 18px 20px 16px;
+  margin-bottom: 18px; border: 1px solid rgba(255, 255, 255, .08);
+  background: linear-gradient(120deg, rgba(255, 143, 168, .18), rgba(159, 140, 255, .12) 60%, rgba(255, 255, 255, .02));
+}
+.mem-hero .mh-t { font-size: 11px; letter-spacing: .18em; font-weight: 800; color: var(--text-sub, #A99FB6); }
+.mem-hero .mh-row { display: flex; align-items: flex-end; gap: 22px; margin-top: 10px; }
+.mem-hero .mh-cell { min-width: 74px }
+.mem-hero .mh-num {
+  font-family: var(--latin); font-weight: 800; font-size: 26px; line-height: 1;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.mem-hero .mh-k { font-size: 10.5px; color: var(--text-sub, #A99FB6); margin-top: 5px }
+.mem-hero .mh-wave { position: absolute; left: 0; right: 0; bottom: 0; height: 46px; opacity: .5; pointer-events: none }
+.mem-hero .mh-wave i {
+  position: absolute; bottom: 0; width: 10px; border-radius: 6px 6px 0 0;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)); opacity: .28;
+  animation: mhUp 1s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes mhUp { from { height: 0 } }
+
+.mem-stream { position: relative; padding-left: 34px; }
+.mem-stream::before {
+  content: ''; position: absolute; left: 13px; top: 4px; bottom: 4px; width: 2px; border-radius: 2px;
+  background: rgba(255, 255, 255, .07);
+}
+.mem-stream > .mem-spine {
+  position: absolute; left: 13px; top: 4px; width: 2px; border-radius: 2px; height: 0;
+  background: var(--grad, linear-gradient(180deg, #FF8FA8, #FFC39B));
+  transition: height .18s linear; box-shadow: 0 0 12px rgba(255, 143, 168, .55);
+}
+/* ★ 默认可见：只有被标记 hz-pending 时才隐藏，动画结束/被打断都不会让卡片消失 */
+.mem-stream > .mem-card { position: relative; opacity: 1; transform: none; transition: transform .28s cubic-bezier(.22,1,.36,1), border-color .28s, box-shadow .28s; }
+.mem-stream > .mem-card.hz-pending { opacity: 0; transform: translateY(16px); }
+/* ★ in 状态必须显式写回 opacity/transform：动画 fill 改成 backwards 后，
+   动画结束会回到基础样式（opacity:0），卡片就永远看不见了。 */
+.mem-stream > .mem-card.in { opacity: 1; transform: none; animation: memIn .55s cubic-bezier(.22, 1, .36, 1) backwards; }
+@keyframes memIn { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+.mem-stream > .mem-card::after {
+  content: ''; position: absolute; left: -27px; top: 24px; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  box-shadow: 0 0 0 4px rgba(255, 143, 168, .14), 0 0 16px rgba(255, 143, 168, .65);
+}
+.mem-stream > .mem-card:hover::after { box-shadow: 0 0 0 6px rgba(255, 143, 168, .22), 0 0 22px rgba(255, 143, 168, .8); }
+.mem-stream > .mem-card:hover { transform: translateX(4px); }
+.mem-stream .mem-card { transition: transform .28s cubic-bezier(.22, 1, .36, 1), border-color .28s, box-shadow .28s; }
+
+/* ------------------------------------------------------------
+   3. 浅色主题：body.light 覆盖暖夜极光
+   ------------------------------------------------------------ */
+body.light {
+  background: #F3F1F7 !important; color: #2A2433 !important;
+  --bg: #F7F5FA; --bg2: #FFFFFF; --nav: rgba(255, 255, 255, .92);
+  --border: rgba(24, 18, 34, .10); --line: rgba(24, 18, 34, .10); --line2: rgba(24, 18, 34, .07);
+  --text: #2A2433; --text-sub: #6C6478; --text-1: #2A2433; --text-2: #6C6478; --text-3: #9A93A6;
+  --card: rgba(255, 255, 255, .92); --soft: rgba(24, 18, 34, .05); --faint: #A79FB2;
+  --ink: #241F2E; --rose: #E45C88; --peach: #E0906A;
+  --grad: linear-gradient(135deg, #E45C88, #E0906A);
+  --sh: 0 10px 30px rgba(40, 24, 60, .10); --sh2: 0 18px 44px rgba(40, 24, 60, .16);
+}
+body.light::before { opacity: .3 !important; }
+body.light::after { background: none !important; }
+body.light #stage { background: transparent !important; }
+body.light .bg-word { opacity: .5 }
+body.light .dcard, body.light #hzBento .tile, body.light .ov-card, body.light .list-group,
+body.light .setting-row, body.light .mem-card, body.light .rec-item, body.light .note-card,
+body.light .sa-card, body.light .ms-card, body.light .moment-card, body.light .capsule-card,
+body.light .hb-card, body.light .cp-card, body.light .cp-life-panel, body.light .cp-status,
+body.light .row {
+  background: #FFFFFF !important; color: #2A2433 !important;
+  border-color: rgba(24, 18, 34, .10) !important;
+}
+body.light .overlay, body.light #chat-page, body.light #settings-page, body.light #profile-page,
+body.light #logs-page, body.light #archive-page, body.light #extmem-page,
+body.light #memstore-page, body.light #selfaware-page {
+  background: #F7F5FA !important; color: #2A2433 !important;
+}
+body.light .dock { background: rgba(255, 255, 255, .92) !important; border-color: rgba(24, 18, 34, .1) !important;
+  box-shadow: 0 18px 44px rgba(40, 24, 60, .16) !important }
+body.light .dock .d-it.on, body.light .hz-fab { color: #fff !important }
+body.light .fh-cmdbar, body.light .f5-status {
+  background: linear-gradient(180deg, transparent, rgba(247, 245, 250, .96)) !important; color: #6C6478 !important }
+body.light .chat-header, body.light #chat-inputbar { background: rgba(255, 255, 255, .9) !important;
+  border-color: rgba(24, 18, 34, .1) !important; color: #2A2433 !important }
+body.light .chat-msg-wrap .msg-ai .bubble, body.light .chat-msg-wrap .msg-ai .msg-bubble {
+  background: #FFFFFF !important; color: #2A2433 !important; border-color: rgba(24, 18, 34, .1) !important }
+body.light .chat-input, body.light #chat-input { background: #F2F0F6 !important; color: #2A2433 !important;
+  border-color: rgba(24, 18, 34, .12) !important }
+body.light #sheet, body.light .sheet { background: #FFFFFF !important; color: #2A2433 !important }
+body.light #sheet input, body.light #sheet select, body.light #sheet textarea {
+  background: #F2F0F6 !important; color: #2A2433 !important; border-color: rgba(24, 18, 34, .12) !important }
+body.light .mask { background: rgba(40, 30, 60, .35) !important }
+body.light #hzPalette { background: #FFFFFF; border-color: rgba(24, 18, 34, .12) }
+body.light #hzPaletteMask { background: rgba(60, 48, 84, .28) }
+body.light .hz-pal-in { border-bottom-color: rgba(24, 18, 34, .1) }
+body.light .hz-pal-in input { color: #2A2433 !important }
+body.light .hz-pal-it { color: #2A2433 }
+body.light .hz-pal-it .pi { background: rgba(24, 18, 34, .05); border-color: rgba(24, 18, 34, .08) }
+body.light .hz-pal-it:hover, body.light .hz-pal-it.sel { background: rgba(228, 92, 136, .12) }
+body.light .hz-view .v-eyebrow, body.light .dc-st, body.light .mem-stream .mh-k { color: #6C6478 }
+body.light .tile .t-label, body.light .hz-pal-sec { color: #8C849A }
+body.light .mem-hero { background: linear-gradient(120deg, rgba(228, 92, 136, .12), rgba(140, 120, 220, .10) 60%, rgba(255, 255, 255, .4));
+  border-color: rgba(24, 18, 34, .08) }
+body.light .mem-stream::before { background: rgba(24, 18, 34, .1) }
+body.light .side-rail, body.light .wk-side, body.light .hz-side {
+  background: #FFFFFF !important; border-color: rgba(24, 18, 34, .1) !important }
+
+/* ★ 兜底：列表卡片永远不能因为动画没跑而隐形 */
+.mem-stream > .mem-card, .mem-stream > .mem-card.hz-pending { opacity: 1 !important; transform: none !important; }

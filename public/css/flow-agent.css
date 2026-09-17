@@ -1,0 +1,64 @@
+/* ============================================================
+   「干活」窗口（Agent 模式）样式 · P3
+   复用既有 .agent-trail / .agent-line / .agent-approval（style.css + flow7.css），
+   本文件只补「干活」窗口自己的容器与新增卡片（计划卡 / 轨迹行）。
+   ============================================================ */
+.aw-wrap{display:flex;flex-direction:column;gap:12px}
+.aw-bar{display:flex;gap:8px;align-items:center;font-size:12px;opacity:.75}
+.aw-stream{display:flex;flex-direction:column;gap:10px;min-height:120px}
+
+/* ---------- 计划卡 / 轨迹行（Task 10） ---------- */
+.aw-plan{border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}
+.aw-plan-h{font-weight:700;margin-bottom:6px}
+.aw-plan ul{margin:0 0 8px 18px;padding:0}
+.aw-plan-meta{font-size:12px;opacity:.75;margin-bottom:8px}
+.aw-plan-btns{display:flex;gap:8px}
+.aw-btn{border:0;border-radius:10px;padding:6px 14px;cursor:pointer;font-size:13px}
+.aw-btn.ok{background:#ff9d9d;color:#3a1414}
+.aw-btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:inherit}
+.aw-trail{display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.aw-trail-row{display:flex;gap:8px;align-items:baseline}
+.aw-trail-row .t{opacity:.8}
+.aw-trail-row.err{color:#ff8f8f}
+.aw-msg{white-space:pre-wrap;word-break:break-word}
+
+/* ---------- 插话两档（Task 12） ---------- */
+.aw-interject{display:flex;gap:8px;align-items:center}
+
+/* ---------- 输入行（Task 12 折叠项：原来 #awText / 派活 / 停 三个控件吃浏览器默认样式） ----------
+   本文件没有自定义属性，取值与上面 .aw-* 一致（半透明白描边 + 10px 圆角 + 13px 字号），
+   只给「干活」窗口自己的节点定样式，不碰其它视图。 */
+.aw-input{display:flex;gap:8px;align-items:center}
+.aw-input #awText{flex:1;min-width:0;padding:8px 12px;font-family:inherit;font-size:13.5px;color:inherit;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px}
+.aw-input #awText::placeholder{color:inherit;opacity:.45}
+.aw-input #awText:focus{outline:none;border-color:#ff9d9d}
+.aw-input .aw-btn{flex:0 0 auto}
+
+/* ---------- 控件条：工作目录 ｜ 权限档 ｜ 模型（Task 15） ---------- */
+.aw-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;opacity:.85}
+.aw-ctl .seg{display:flex;gap:6px;align-items:center;padding:4px 10px;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;background:rgba(255,255,255,.04)}
+.aw-ctl .seg .lab{opacity:.6}
+.aw-ctl .seg .path{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aw-ctl .aw-btn.small{padding:3px 10px;font-size:12px}
+.aw-ctl-ask{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,214,143,.08)}
+.aw-ctl-ask .warn{color:#ffcf8f;font-size:12.5px}
+
+/* ---------- 聊天里的「她正在干活」联动卡（Task 13 / R66） ----------
+   它挂在**聊天流**里（不是「干活」页），所以做成一颗能点的药丸：给足可点区域 + 明确的「点我」提示。
+   颜色只用半透明粉 + 继承正文色 —— 聊天页有深/浅两套主题（flow7.css 会把 #chat-body 的浅色渐变
+   去掉），写死前景色会在其中一套上糊掉。
+   ★ 改了本文件就要一起提 index.html 里 flow-agent.css 的 ?v=（浏览器缓存）。 */
+.aw-live{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;cursor:pointer;
+  padding:6px 12px;border-radius:999px;font-size:12.5px;line-height:1.4;
+  border:1px solid rgba(255,157,157,.55);background:rgba(255,157,157,.16);
+  -webkit-tap-highlight-color:transparent}
+.aw-live b{font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.aw-live:hover{background:rgba(255,157,157,.28);border-color:rgba(255,157,157,.75)}
+.aw-live:active{transform:translateY(1px)}
+
+/* ---------- 卡住了的失败态（R66）：原因 + 「收起这张卡」出口 ---------- */
+.aw-stuck{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;
+  border:1px solid rgba(255,143,143,.5);background:rgba(255,143,143,.12);font-size:12.5px}

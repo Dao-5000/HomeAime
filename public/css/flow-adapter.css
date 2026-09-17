@@ -1,0 +1,114 @@
+/* ============================================================
+   Homeaime · Flow 适配层样式（flow-adapter.css）
+   只做两件事：1) 消除新旧壳层的布局冲突  2) 让原项目 #page-* 在 Flow 视图
+   容器里正常滚动。不含任何配色（配色在 flow.css / style.css）。
+   ============================================================ */
+
+/* 旧壳层的 #app / #left-pane / #topbar / #pages / #tabbar 已不在新 index.html 中，
+   但原项目模块生成的内容依赖 #pages 的滚动容器行为 —— 这里给隐藏容器兜底。 */
+html, body { overflow-x: hidden; }
+
+/* 被搬进 .hz-vslot 的原项目页面：去掉页面自身的定位与内边距，交给视图容器 */
+.hz-vslot > section[id^="page-"] {
+  position: static;
+  inset: auto;
+  display: block;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
+  padding: 0;
+}
+.hz-vslot > section[id^="page-"] > * { max-width: 100%; }
+
+/* 原项目页面里的底部安全内边距（原来给 tabbar 留的）在 Flow 里不需要 */
+.hz-vslot { padding-bottom: 26px; }
+
+/* 旧聊天抽屉：新壳层用 #chat-page 滑入抽屉，这里确保关闭态不挡点击 */
+#chat-page.closed { pointer-events: none; }
+#chat-page.open { pointer-events: auto; }
+
+/* 覆盖页（设置/资料/日志/档案/存储/外置/觉察）：沿用旧版 open 类 */
+#settings-page.open, #profile-page.open, #logs-page.open, #archive-page.open,
+#extmem-page.open, #memstore-page.open, #selfaware-page.open { visibility: visible; }
+
+/* 视图头部操作区为空时不占位 */
+.hz-view .v-acts:empty { display: none; }
+
+/* ── 桌面端补丁（新壳层漏掉的细节，2026-09-13） ───────────────── */
+
+/* 窗口是无边框的（electron frame:false），拖动全靠 app-region。
+   新壳层顶部栏是 class .topbar，没有 drag 规则 → 窗口拖不动；
+   同时 pc_enhance 注入的最小化/关闭按钮要挂在 #topbar-right 上。 */
+.topbar { -webkit-app-region: drag; }
+.topbar button, .topbar .ibtn, .topbar .top-right,
+.topbar .greet-block, .topbar .brand { -webkit-app-region: no-drag; }
+
+/* pc_enhance 的「AI 内核设置」覆盖页要 appendChild 到 #app（老壳层容器，新壳层已删）。
+   这里补一个只做容器、不吃点击的 #app；覆盖页展开时自身恢复点击。 */
+#app { position: fixed; inset: 0; z-index: 26; pointer-events: none; }
+#app > * { pointer-events: auto; }
+
+/* 补回原 #tab-records-dot：「记录」有未读信件时的红点 */
+.f-it { position: relative; }
+.hz-unread-dot {
+  position: absolute; top: 6px; right: 16px; width: 8px; height: 8px;
+  border-radius: 50%; background: #FF5A79; box-shadow: 0 0 8px rgba(255, 90, 121, .85);
+  display: none; pointer-events: none;
+}
+
+/* 底部状态条：flow-app.js 注入 .f5-status，但原型配色里没有它的样式，
+   于是它按普通块级元素掉在内容末尾，和「点击卡片切换伴侣」提示叠在一起。
+   这里补成贴底细条，位于 Dock 下方，不与内容冲突。 */
+.f5-status {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 20px 6px; pointer-events: none;
+  font-size: 9.5px; letter-spacing: .14em; color: var(--sub, #9a93a8);
+  background: linear-gradient(180deg, transparent, rgba(18, 16, 32, .9));
+}
+.f5-status b { color: var(--ink, #F4F1F8); font-weight: 700; }
+.f5-status .sb-c { color: var(--faint, var(--sub, #6f6880)); }
+.f5-status .dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px;
+  background: var(--rose, #FF8FA8); box-shadow: 0 0 6px var(--rose, #FF8FA8);
+  vertical-align: middle;
+}
+
+/* ── 原项目遗留「写死白底」组件在暗色皮肤下的对齐 ───────────────────
+   style.css 里这些卡片写的是 background:#fff（不是 var(--card)），
+   暖夜极光换肤只覆盖了壳层/聊天/覆盖层，漏掉了它们；
+   而皮肤把 --text 全局改成浅色 → 浅字压在白底上会看不见。
+   这里统一改成玻璃卡 + 浅字，作用域限定在原项目页面与覆盖层内。 */
+.list-group, .row, .setting-row, .action-sheet .action-item,
+.p-hero, .p-subtitle, .p-card, .log-stats, .log-card, .log-emo-chip,
+.learn-stat, .ms-card, .ms-add-menu, .lib-file, .lib-path,
+.ov-card, .ov-stat, .ov-quick-btn, .todo-row, .hb-card,
+.rec-bubble, .note-card, .sa-card, .habit-row, .capsule-card,
+.moment-publish, .moment-card, .cp-card, .cp-life-panel, .cp-status,
+.agent-trail, .agent-approval {
+  background: rgba(255, 255, 255, .055) !important;
+  border-color: rgba(255, 255, 255, .09) !important;
+  box-shadow: none !important;
+  color: var(--text, #F4F1F8);
+}
+/* 这些元素是白底卡片里写死的深色文字/图标，改成浅色才看得见 */
+.agent-line, .cp-status-row, .cp-mc, .cp-card-name, .cp-life-name,
+.log-emotion-pill, .log-theme, .ms-title-inline, .ms-char-name,
+.agent-trail-title, .agent-trail-status, .todo-text, .blind-task, .key-link {
+  color: var(--text, #F4F1F8);
+}
+.ov-stat .ov-stat-num, .ov-stat .ov-stat-label { color: inherit; }
+
+/* 原项目覆盖页里的原生表单控件仍是浏览器默认浅色（最明显的是「AI 连接模式」下拉框），
+   补成暗色玻璃；复选框/单选框是项目自绘开关，排除在外。 */
+.hz-vslot select, .overlay select, .sheet select,
+.hz-vslot input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.overlay input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.hz-vslot textarea, .overlay textarea {
+  background: rgba(255, 255, 255, .06) !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  color: var(--text, #F4F1F8) !important;
+}
+.hz-vslot option, .overlay option, .sheet option { background: #1A1723; color: #F4F1F8; }
+.hz-vslot ::placeholder, .overlay ::placeholder { color: var(--text-3, #6B6278); }

@@ -1,0 +1,962 @@
+/* ============================================================
+   Homeaime · Flow v7 视觉/交互增强（flow7.css）
+   加载在 flow-adapter.css 之后，用于覆盖/加强：
+     1) 图标系统样式（flow7.js 换出的 SVG）
+     2) 问候语 + 用户名的排版修复
+     3) Dock / FAB 扇形 的对齐与动效
+     4) 卡片、按钮、chip 的悬浮/按压反馈
+     5) 更强的视图入场与列表错落动画
+   回滚：删掉 index.html 里本文件的引用即可。
+   ============================================================ */
+
+/* ---------- 1. 图标 ---------- */
+.hz-ico { display: inline-flex; align-items: center; justify-content: center;
+  width: 1.15em; height: 1.15em; margin-right: .38em; vertical-align: -.18em; flex: none;
+  color: inherit; }
+.hz-ico .hz-ic { width: 100%; height: 100%; display: block; }
+.hz-ic { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hz-ic.solid { fill: currentColor; stroke: none; }
+/* 行内图标跟着当前强调色走一点，避免整片灰 */
+.hz-ico { color: var(--rose, #FF8FA8); opacity: .92; }
+.hz-ico + * { color: inherit; }
+
+/* ---------- 1.5 壳层定位加固（拉动窗口不再跑飞） ---------- */
+/* #stage 原样式是 1280×800 居中缩放；flow5 启动时改成全出血，但 flow-app 里
+   旧的 resize 监听仍会执行 translate(-50%,-50%) → 拉一下窗口整个 UI 就滑出屏幕。
+   这里用 !important 直接锁死几何，内联样式改不动它，彻底免疫。 */
+#stage {
+  left: 0 !important; top: 0 !important; transform: none !important;
+  width: 100vw !important; height: 100vh !important; border-radius: 0 !important;
+}
+
+/* Dock 居中：原来靠 transform:translateX(-50%)，被入场动画(.st)的 transform 覆盖后
+   整个 Dock 右移半个身位，FAB 也随之偏离，扇形菜单看起来就是歪的。
+   改用 left/right:0 + margin:auto 居中，与 transform 解耦。 */
+.dock {
+  left: 0 !important; right: 0 !important;
+  margin-left: auto !important; margin-right: auto !important;
+  width: fit-content !important; max-width: calc(100% - 32px);
+  transform: none !important;
+}
+
+/* ---------- 2. 问候语 + 用户名 ---------- */
+/* 原设计把用户名做成描边幽灵字，用户名一长/问候语一长就挤在一起。
+   这里改成同一行的渐变实心字，并允许两端截断，永不重叠。 */
+.greet-block { align-items: baseline !important; flex-wrap: nowrap; gap: 0; }
+.greet-block .g1 { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; }
+.greet-block .g2 { flex: 0 0 auto; max-width: 40%; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; margin-left: 8px; opacity: 1 !important;
+  color: transparent !important; -webkit-text-stroke: 0 !important;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  -webkit-background-clip: text; background-clip: text; }
+
+/* ---------- 3. Dock ---------- */
+.dock { box-shadow: 0 18px 44px rgba(6, 3, 14, .6), inset 0 1px 0 rgba(255, 255, 255, .07) !important;
+  border: 1px solid rgba(255, 255, 255, .1) !important; }
+.d-it { transition: transform .28s cubic-bezier(.22, 1, .36, 1), color .25s, background .25s, box-shadow .25s !important; }
+.d-it:hover { transform: translateY(-6px) !important; }
+.d-it:active { transform: translateY(-2px) scale(.93) !important; }
+.d-it.on { background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)) !important;
+  color: #2A1220 !important; box-shadow: 0 10px 24px rgba(255, 143, 168, .42) !important; }
+.d-it.on .ico { color: #2A1220 !important; }
+.hz-fab { background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)) !important; color: #2A1220 !important;
+  box-shadow: 0 14px 30px rgba(255, 143, 168, .45) !important; }
+.hz-fab .ico { color: #2A1220 !important; }
+.hz-fab:active { transform: scale(.92) !important; }
+
+/* ---------- 4. FAB 扇形：对齐 + 错落 ---------- */
+.hz-fan .f-it { width: 60px !important; height: 60px !important; left: -30px !important; top: -30px !important;
+  border-radius: 21px !important; background: rgba(28, 24, 40, .92) !important;
+  border: 1px solid rgba(255, 255, 255, .1) !important;
+  box-shadow: 0 14px 30px rgba(6, 3, 14, .55) !important;
+  align-items: center; justify-content: center; text-align: center; gap: 3px !important;
+  transition: transform .5s cubic-bezier(.22, 1.4, .36, 1), opacity .32s, background .25s, box-shadow .25s !important; }
+.hz-fan .f-it .ico { width: 21px !important; height: 21px !important; font-size: 21px !important; color: var(--rose, #FF8FA8); }
+.hz-fan .f-it span { font-size: 9.5px !important; line-height: 1 !important; letter-spacing: .04em;
+  color: var(--text-sub) !important; text-align: center; }
+.hz-fan.open .f-it { transform: rotate(calc(var(--d) * 36deg - 54deg)) translateY(-104px) rotate(calc(54deg - var(--d) * 36deg)) scale(1) !important; }
+.hz-fan.open .f-it:hover { background: rgba(255, 143, 168, .16) !important;
+  box-shadow: 0 18px 36px rgba(255, 143, 168, .35) !important;
+  transform: rotate(calc(var(--d) * 36deg - 54deg)) translateY(-112px) rotate(calc(54deg - var(--d) * 36deg)) scale(1.1) !important; }
+/* 依次弹出 */
+.hz-fan.open .f-it { transition-delay: calc(var(--d) * 55ms) !important; }
+.hz-fan.open .f-it:hover { transition-delay: 0ms !important; }
+/* 当前页高亮 */
+.hz-fan .f-it.on { background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)) !important;
+  box-shadow: 0 16px 32px rgba(255, 143, 168, .5) !important; }
+.hz-fan .f-it.on .ico, .hz-fan .f-it.on span { color: #2A1220 !important; }
+
+/* ---------- 5. 视图入场（更强） ---------- */
+/* 注意：不要给 .hz-view 容器本身加常驻 filter —— 它会让整个视图变成合成层，
+   在软件渲染/截图下直接白屏（实测踩过）。blur 只放在 keyframes 里。 */
+.hz-view { transform: translateY(26px) scale(.985);
+  transition: opacity .5s cubic-bezier(.22, 1, .36, 1), transform .55s cubic-bezier(.22, 1, .36, 1) !important; }
+.hz-view.on .hz-vslot > section > * { animation: hzRise7 .8s cubic-bezier(.22, 1, .36, 1) backwards; }
+.hz-view.on .hz-vslot > section > *:nth-child(1) { animation-delay: .04s }
+.hz-view.on .hz-vslot > section > *:nth-child(2) { animation-delay: .10s }
+.hz-view.on .hz-vslot > section > *:nth-child(3) { animation-delay: .16s }
+.hz-view.on .hz-vslot > section > *:nth-child(4) { animation-delay: .22s }
+.hz-view.on .hz-vslot > section > *:nth-child(5) { animation-delay: .28s }
+.hz-view.on .hz-vslot > section > *:nth-child(n+6) { animation-delay: .34s }
+@keyframes hzRise7 {
+  from { opacity: 0; transform: translateY(26px) scale(.98); filter: blur(5px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ---------- 6. 卡片：悬浮上浮 + 玫瑰描边 + 内高光 ---------- */
+.hz-vslot .ov-card, .hz-vslot .list-group, .hz-vslot .rec-item, .hz-vslot .note-card,
+.hz-vslot .moment-card, .hz-vslot .sa-card, .hz-vslot .ms-card, .hz-vslot .habit-row,
+.hz-vslot .cp-card, .hz-vslot .cp-life-panel, .hz-vslot .capsule-card, .hz-vslot .hb-card,
+.overlay .list-group, .overlay .p-card, .overlay .p-hero {
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1), box-shadow .32s, border-color .32s, background .32s !important;
+  border: 1px solid rgba(255, 255, 255, .07) !important;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015)) !important;
+}
+.hz-vslot .ov-card:hover, .hz-vslot .rec-item:hover, .hz-vslot .note-card:hover,
+.hz-vslot .moment-card:hover, .hz-vslot .sa-card:hover, .hz-vslot .ms-card:hover,
+.hz-vslot .cp-card:hover, .overlay .p-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(5, 2, 12, .5) !important;
+  border-color: rgba(255, 143, 168, .3) !important;
+}
+/* 列表行不做位移，只做高亮 */
+.hz-vslot .row, .overlay .setting-row, .hz-vslot .setting-row {
+  transition: background .25s, padding-left .25s !important;
+}
+.hz-vslot .row:hover, .overlay .setting-row:hover, .hz-vslot .setting-row:hover {
+  background: rgba(255, 143, 168, .08) !important;
+}
+
+/* ---------- 7. 按钮 / chip 反馈 ---------- */
+.hz-vslot button, .overlay button, .hz-view button, .hz-view .mem-tab, .hz-view .chip, .overlay .btn {
+  transition: transform .2s cubic-bezier(.22, 1, .36, 1), background .22s, color .22s, box-shadow .22s, border-color .22s !important;
+}
+.hz-vslot button:active, .overlay button:active, .hz-view button:active,
+.hz-view .mem-tab:active, .hz-view .chip:active { transform: scale(.94) !important; }
+.hz-view .mem-tab:hover, .hz-view .chip:hover { transform: translateY(-2px) !important;
+  border-color: rgba(255, 143, 168, .45) !important; color: var(--ink, #F4F1F8) !important; }
+.hz-view .mem-tab.active { background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)) !important;
+  color: #2A1220 !important; border-color: transparent !important;
+  box-shadow: 0 8px 20px rgba(255, 143, 168, .35) !important; }
+
+/* 视图标题下方加一条渐变短线，页面头部更有识别度 */
+.hz-view .vh .v-title { position: relative; padding-bottom: 10px; }
+.hz-view .vh .v-title::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 46px; height: 3px; border-radius: 3px;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  animation: hzBar .7s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes hzBar { from { width: 0; opacity: 0 } to { width: 46px; opacity: 1 } }
+
+/* ---------- 8. 滚动条 ---------- */
+.hz-vslot::-webkit-scrollbar { width: 8px; }
+.hz-vslot::-webkit-scrollbar-thumb { background: rgba(255, 143, 168, .35); border-radius: 4px; }
+.hz-vslot::-webkit-scrollbar-thumb:hover { background: rgba(255, 143, 168, .6); }
+
+/* ---------- 9. 聊天抽屉：补上漏掉的浅色底 ---------- */
+/* style.css 在 860px+ 给 #chat-body 加了浅色渐变（换肤时漏掉）→ 桌面端聊天整片发白 */
+#chat-body { background: transparent !important; }
+#chat-page .time-divider { color: var(--text-3, #6B6278) !important; }
+#chat-page .msg-row .bubble { backdrop-filter: blur(10px); }
+#chat-page .chat-header { backdrop-filter: blur(14px); }
+
+/* 聊天输入条按钮：悬停/按压缩放 */
+#chat-inputbar button, #chat-send, #chat-mic, #chat-image, #chat-mem, #chat-back, #chat-more {
+  transition: transform .2s cubic-bezier(.22, 1, .36, 1), color .22s, background .22s !important;
+}
+#chat-inputbar button:active, #chat-send:active, #chat-mic:active,
+#chat-image:active, #chat-mem:active, #chat-back:active, #chat-more:active { transform: scale(.9) !important; }
+#chat-back, #chat-mem, #chat-more { color: var(--text-sub) !important; }
+#chat-back:hover, #chat-mem:hover, #chat-more:hover { color: var(--rose, #FF8FA8) !important; }
+
+/* ---------- 10. 减少动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hz-view, .hz-view.on .hz-vslot > section > *, .d-it, .hz-fan .f-it { animation: none !important; transition: none !important; }
+}
+
+/* ---------- 11. 隐藏态不再拦截点击 ---------- */
+/* #voice-call-overlay 靠 opacity+位移隐藏，仍可命中点击；通话结束后若清理异常会
+   让整个界面点不动。这里给「未 .show」的通话层和隐藏覆盖层兜底 pointer-events。 */
+#voice-call-overlay:not(.show) { pointer-events: none !important; }
+.overlay:not(.open) { pointer-events: none !important; }
+
+/* ============================================================
+   v7.2 · 性能 + 布局重排
+   ============================================================ */
+
+/* ---------- A. 性能：去掉最贵的两处 ---------- */
+/* 极光层原本每帧重绘一张 80px 模糊的全屏图 —— 这是点击/滚动发木的主因之一。
+   改成静态：观感保留，零重绘。 */
+body::before { animation: none !important; }
+/* 上一版给每条气泡/聊天头加的 backdrop-filter 同样很贵，撤掉 */
+#chat-page .msg-row .bubble, #chat-page .chat-header { backdrop-filter: none !important; }
+
+/* 过渡只保留 transform / 颜色，避免 hover 时重绘背景、阴影、描边 */
+.hz-vslot .ov-card, .hz-vslot .list-group, .hz-vslot .rec-item, .hz-vslot .note-card,
+.hz-vslot .moment-card, .hz-vslot .sa-card, .hz-vslot .ms-card, .hz-vslot .habit-row,
+.hz-vslot .cp-card, .hz-vslot .cp-life-panel, .hz-vslot .capsule-card, .hz-vslot .hb-card,
+.overlay .list-group, .overlay .p-card, .overlay .p-hero {
+  transition: transform .26s cubic-bezier(.22, 1, .36, 1), box-shadow .26s !important;
+}
+.hz-vslot button, .overlay button, .hz-view button, .hz-view .mem-tab,
+.hz-view .chip, .overlay .btn {
+  transition: transform .16s ease, color .16s ease, background .16s ease !important;
+}
+
+/* ---------- B. 记忆流卡片：底部计数与跑马灯不再重叠 ---------- */
+.t-mem { padding-bottom: 58px !important; }
+.t-mem .mq-wrap { margin-top: 12px !important; max-height: 46px; }
+.t-mem .foot { left: 20px; right: 20px; bottom: 14px; gap: 8px; }
+.t-mem .cnt { display: inline-flex; align-items: baseline; gap: 5px; }
+.t-mem .cnt b { font-family: var(--latin); font-weight: 800; font-size: 22px;
+  letter-spacing: -.02em; color: var(--ink); }
+.t-mem .cnt small { font-family: var(--sans); font-size: 10px; color: var(--text-sub); font-weight: 500; }
+
+/* ---------- C. 内容画布：宽屏居中，别拉满整屏 ---------- */
+.hz-vslot { padding: 2px 12px 30px 2px !important; }
+.hz-vslot > section > * { max-width: 1200px; }
+.hz-vslot > section { width: 100%; }
+
+/* 小节标题：统一加一条渐变竖条 + 字距 */
+.hz-vslot .cp-sec-title, .hz-vslot .sec-toolbar, .hz-vslot .moments-title {
+  position: relative; padding-left: 14px;
+}
+.hz-vslot .cp-sec-title::before, .hz-vslot .sec-toolbar::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 4px; height: 15px; border-radius: 2px;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+}
+
+/* ---------- D. 功能页：卡片两列网格（原来是一长条） ---------- */
+#page-features {
+  display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px; align-items: start;
+}
+#page-features > .ov-card { margin: 0 !important; }
+#page-features > .list-group { grid-column: 1 / -1; margin: 0 !important; }
+#page-features > .ov-card.learn { grid-column: auto; }
+@media (max-width: 980px) { #page-features { grid-template-columns: 1fr; } }
+
+/* ---------- E. 陪伴页：只做卡片化，不动内部网格 ---------- */
+/* 注意：#page-* 自身在 style.css 里带浅色底，id 选择器会盖过 .hz-vslot 的透明设置，
+   必须用带 #stage 前缀（更高优先级）+ !important 才能压住。 */
+#stage .hz-vslot > section[id^="page-"] { background: transparent !important; }
+#page-companion .cp-banner { border-radius: 22px; }
+#page-companion .cp-life-panel,
+#page-companion .cp-status { border-radius: 22px; padding: 18px 20px; }
+
+/* ---------- F. 朋友圈：正文居中，阅读宽度 ---------- */
+#page-moments .moments-feed { max-width: 760px; margin: 0 auto; width: 100%; }
+#page-moments .moment-card, #page-moments .moments-card { border-radius: 22px; }
+
+/* ---------- G. 她们页：每个伴侣一张卡（原来是整块白底列表） ---------- */
+#page-persona .list-group {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+  padding: 0 !important;
+}
+#page-persona .list-group .group-title { padding-left: 4px; }
+#page-persona .row {
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) !important;
+  border: 1px solid rgba(255,255,255,.08) !important; border-radius: 20px;
+  margin-bottom: 10px; padding: 14px 16px;
+}
+#page-persona .row:hover { transform: translateX(3px); }
+
+/* ---------- H. 记忆 / 记录 / 生活：列表卡片化 ---------- */
+.hz-vslot .rec-item, .hz-vslot .note-card, .hz-vslot .sa-card, .hz-vslot .ms-card {
+  border-radius: 20px !important; padding: 16px 18px !important;
+}
+.hz-vslot .seg { border-radius: 999px; padding: 4px; }
+.hz-vslot .seg-btn { border-radius: 999px !important; }
+
+/* ---------- I. 朋友圈封面：换成暖夜极光配色（原为橄榄灰渐变） ---------- */
+#page-moments .moments-header {
+  background: linear-gradient(150deg, rgba(255, 143, 168, .30), rgba(159, 140, 255, .16) 55%, rgba(18, 16, 32, .92)) !important;
+  border: 1px solid rgba(255, 255, 255, .09) !important;
+  border-radius: 24px; min-height: 148px;
+  box-shadow: inset 0 -40px 60px rgba(10, 5, 18, .45);
+}
+#page-moments .moments-header .moments-title { font-size: 26px; font-weight: 900; }
+
+/* ---------- J. 合成层提示：让常驻动画走独立图层，减少主线程重绘 ---------- */
+.mq { will-change: transform; }
+.t-box .shine { will-change: transform; }
+.f5-status { contain: layout paint; }
+
+/* ============================================================
+   v7.3 · 记忆流彻底不重叠 + 页面架构重排（左轨 + 工作区）
+   ============================================================ */
+
+/* ---------- K. 记忆流卡片：改 flex 纵向，计数回到文档流 ---------- */
+.t-mem { display: flex !important; flex-direction: column; padding: 18px 20px 16px !important; }
+.t-mem .t-label { order: 1; }
+.t-mem .mq-wrap {
+  order: 2; flex: 1 1 auto; min-height: 40px; max-height: none !important;
+  margin-top: 12px !important; display: flex; align-items: center; overflow: hidden;
+}
+.t-mem .foot {
+  order: 3; position: static !important; margin-top: auto; padding-top: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ---------- L. 工作区：左侧导航轨 + 右侧内容 ---------- */
+.wk { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 22px; align-items: start; }
+.wk-side {
+  position: sticky; top: 0; display: flex; flex-direction: column; gap: 10px;
+  padding: 14px; border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.08);
+}
+.wk-side > * { margin: 0 !important; }
+/* 轨道里的分段控件竖排 */
+.wk-side .seg { flex-direction: column !important; background: transparent !important;
+  border: 0 !important; padding: 0 !important; gap: 6px !important; display: flex; }
+.wk-side .seg-btn { width: 100% !important; justify-content: flex-start !important;
+  text-align: left; border-radius: 14px !important; padding: 11px 14px !important; }
+.wk-side .mem-tabs { flex-direction: column !important; margin: 0 !important; gap: 8px; }
+.wk-side .mem-tab { width: 100%; justify-content: flex-start; text-align: left; }
+.wk-side .chips { flex-direction: column; align-items: stretch; gap: 8px; }
+.wk-side .sec-toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
+.wk-main { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.wk-main > * { margin-top: 0 !important; }
+
+@media (max-width: 960px) {
+  .wk { grid-template-columns: 1fr; gap: 14px; }
+  .wk-side { position: static; flex-direction: row; flex-wrap: wrap; }
+  .wk-side .seg { flex-direction: row !important; flex-wrap: wrap; }
+  .wk-side .seg-btn { width: auto !important; }
+}
+
+/* ---------- M. 陪伴页：能力卡 / 游戏卡网格化（浅色底已修，网格现在安全） ---------- */
+#page-companion .cp-mc {
+  display: grid !important; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
+}
+#page-companion .cp-grid {
+  display: grid !important; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;
+}
+#page-companion .cp-banner { margin-bottom: 4px; }
+
+/* ---------- N. 她们页：宽屏两列伴侣卡 ---------- */
+@media (min-width: 1000px) {
+  #page-persona .list-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  #page-persona .list-group .group-title { grid-column: 1 / -1; }
+  #page-persona .row { margin-bottom: 0 !important; }
+}
+
+/* 伴侣通常只有 1~2 个，两列会留大片空白 → 保持单列卡片（覆盖上面的 2 列规则） */
+#page-persona .list-group { display: block !important; }
+
+/* ============================================================
+   v7.4 · 总览高级感重设计：指针聚光 + 主角卡 + 玻璃砖 + 微视差
+   ============================================================ */
+
+/* 指针聚光（跟随鼠标的柔光，压在卡片之下） */
+#hzSpot {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(
+    380px 380px at var(--mx, 50%) var(--my, 28%),
+    rgba(255, 143, 168, .20), rgba(159, 140, 255, .10) 42%, transparent 70%);
+  transition: background .12s linear;
+}
+
+/* 卡片微视差（translate 与 transform 相互独立，不会打架） */
+#hzDeck .dcard, #hzBento .tile {
+  translate: var(--px, 0) var(--py, 0);
+  transition: translate .45s cubic-bezier(.22, 1, .36, 1),
+              box-shadow .3s ease, transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ── 主角卡 ── */
+#hzDeck .dcard.s0 {
+  border-radius: 30px !important;
+  box-shadow: 0 28px 70px rgba(6, 3, 14, .55), inset 0 1px 0 rgba(255, 255, 255, .07) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+}
+#hzDeck .dcard.s0:hover { box-shadow: 0 34px 84px rgba(6, 3, 14, .62),
+  0 0 0 1px rgba(255, 143, 168, .28), inset 0 1px 0 rgba(255, 255, 255, .1) !important; }
+.avatar.xl {
+  width: 84px; height: 84px; border-radius: 28px; font-size: 30px; font-weight: 800;
+  box-shadow: 0 16px 34px rgba(6, 3, 14, .5), inset 0 0 0 1px rgba(255, 255, 255, .1);
+  overflow: hidden; flex: none;
+}
+.avatar.xl img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dc-meta { flex: 1; min-width: 0; }
+.dc-stage { height: 4px; border-radius: 99px; background: rgba(255, 255, 255, .1);
+  margin-top: 9px; overflow: hidden; }
+.dc-stage i { display: block; height: 100%; border-radius: inherit;
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)); }
+
+/* ── 其他伴侣：迷你条 ── */
+.dcard-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 10px; margin-top: 12px; }
+.dmini {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer;
+  border-radius: 18px; background: rgba(255, 255, 255, .045);
+  border: 1px solid rgba(255, 255, 255, .08); backdrop-filter: blur(8px);
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1), background .22s, border-color .22s;
+}
+.dmini:hover { transform: translateY(-2px); background: rgba(255, 143, 168, .13);
+  border-color: rgba(255, 143, 168, .3); }
+.dmini-n { font-weight: 800; font-size: 13px; }
+.dmini-s { font-size: 10px; color: var(--text-sub); letter-spacing: .06em; margin-top: 2px; }
+
+/* ── 玻璃砖（bento）── */
+#hzBento .tile {
+  border-radius: 30px !important;
+  border: 1px solid rgba(255, 255, 255, .07) !important;
+  box-shadow: 0 24px 60px rgba(6, 3, 14, .5), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+}
+#hzBento .tile:hover {
+  box-shadow: 0 30px 74px rgba(6, 3, 14, .6), 0 0 0 1px rgba(255, 143, 168, .26),
+              inset 0 1px 0 rgba(255, 255, 255, .09) !important;
+}
+#hzBento .tile .t-label { letter-spacing: .16em; font-weight: 800; }
+
+/* ── 主角卡：数据条 ── */
+.dc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 4px; }
+.dc-stat {
+  padding: 10px 12px; border-radius: 16px; text-align: center;
+  background: rgba(255, 255, 255, .045); border: 1px solid rgba(255, 255, 255, .07);
+}
+.dc-stat b { display: block; font-family: var(--latin); font-weight: 800; font-size: 20px;
+  letter-spacing: -.02em; color: var(--ink); }
+.dc-stat span { display: block; font-size: 10px; color: var(--text-sub); margin-top: 3px; letter-spacing: .06em; }
+
+/* ============================================================
+   v7.5 · 弹层层级 / 光效收敛 / 动态渐变描边 / 视差 / 3D 卡片堆叠
+   ============================================================ */
+
+/* ---------- A. 弹层必须在所有内容之上 ---------- */
+/* 原来 .mask=30 / .sheet=31，而 .dock=40、#chat-page≈70 →
+   从聊天「⋯」弹出的菜单会钻到抽屉后面，遮罩也收不到点击，
+   于是「点进去出不来」。统一提到最上层。 */
+.mask { z-index: 200 !important; }
+.sheet { z-index: 201 !important; }
+
+/* ---------- B. 指针光效收敛（原来太大太亮） ---------- */
+#hzSpot {
+  background: radial-gradient(
+    230px 230px at var(--mx, 50%) var(--my, 28%),
+    rgba(255, 143, 168, .12), rgba(159, 140, 255, .055) 45%, transparent 72%);
+}
+
+/* ---------- C. 动态渐变描边 ---------- */
+@property --hzAng { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+#hzDeck .dcard.s0::before, #hzBento .tile::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: conic-gradient(from var(--hzAng),
+    rgba(255, 143, 168, .85), rgba(159, 140, 255, .45) 30%,
+    rgba(255, 195, 155, .12) 55%, rgba(255, 143, 168, .85));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: hzSpin 7.5s linear infinite; pointer-events: none; opacity: .7;
+}
+@keyframes hzSpin { to { --hzAng: 360deg; } }
+#hzBento .tile:nth-child(2n)::before { animation-duration: 9.5s; }
+#hzBento .tile:nth-child(3n)::before { animation-duration: 11s; }
+
+/* ---------- D. 滚动视差：视图标题随滚动轻微上浮 ---------- */
+.hz-view .vh { translate: 0 calc(var(--sy, 0px) * -0.32); }
+.hz-view.on .hz-vslot { will-change: scroll-position; }
+
+/* ---------- E. 主角卡 3D 堆叠 ---------- */
+#hzDeck { position: relative; perspective: 1500px; min-height: 432px; }
+#hzDeck .dcard.stack { position: absolute; left: 0; right: 0; top: 0;
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1), opacity .55s ease; }
+#hzDeck .dcard.stack.s0 { z-index: 3; transform: none; opacity: 1; }
+#hzDeck .dcard.stack.s1 { z-index: 2; transform: translateY(20px) scale(.945) rotateX(3deg); opacity: .68; }
+#hzDeck .dcard.stack.s2 { z-index: 1; transform: translateY(40px) scale(.89) rotateX(6deg); opacity: .38; }
+#hzDeck .dcard.stack:not(.s0) { cursor: pointer; }
+#hzDeck .dcard.stack:not(.s0):hover { opacity: .9; }
+.hz-stack-dots { display: flex; gap: 6px; justify-content: center; margin-top: 6px; }
+.hz-stack-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .3s; }
+.hz-stack-dots i.on { width: 18px; border-radius: 99px; background: var(--grad, linear-gradient(135deg,#FF8FA8,#FFC39B)); }
+
+/* ============================================================
+   v7.6 · 总览主角卡动态元素 + 独立聊天窗 / 抽屉宽度
+   ============================================================ */
+
+/* --- 头像在线脉冲环 --- */
+.avatar.xl { position: relative; }
+.avatar.xl::after {
+  content: ''; position: absolute; inset: -5px; border-radius: 33px; pointer-events: none;
+  border: 2px solid rgba(255, 143, 168, .45); animation: avPulse 2.8s ease-out infinite;
+}
+@keyframes avPulse { 0% { transform: scale(.96); opacity: .75; } 70% { transform: scale(1.07); opacity: 0; } 100% { opacity: 0; } }
+
+/* --- 实时状态行 --- */
+.dc-live { display: flex; align-items: center; gap: 8px; font-size: 11px;
+  color: var(--text-sub); margin: 12px 0 2px; }
+.dc-live .live { display: inline-flex; align-items: center; gap: 6px; color: #7CE3A6; font-weight: 700; }
+.dc-live .live i { width: 7px; height: 7px; border-radius: 50%; background: #4CC27E;
+  animation: livePulse 1.8s infinite; }
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(76, 194, 126, .55); }
+  70% { box-shadow: 0 0 0 8px rgba(76, 194, 126, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 194, 126, 0); }
+}
+.dc-live .sep { opacity: .4; }
+.dc-live .muted { opacity: .75; }
+
+/* --- 近 7 天走势 sparkline --- */
+.dc-spark { margin: 12px 0 2px; padding: 12px 14px; border-radius: 18px;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .07); }
+.spark-hd { display: flex; align-items: baseline; justify-content: space-between;
+  font-size: 11px; color: var(--text-sub); }
+.spark-hd b { font-family: var(--latin); font-weight: 800; font-size: 16px; color: var(--ink); }
+.dc-spark .bars { height: 46px; margin-top: 10px; gap: 6px; }
+.dc-spark .bars i { background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  opacity: .32; border-radius: 6px 6px 2px 2px; transform-origin: bottom;
+  animation: barGrow .75s cubic-bezier(.22, 1, .36, 1) both; }
+.dc-spark .bars i:nth-child(1) { animation-delay: .04s } .dc-spark .bars i:nth-child(2) { animation-delay: .10s }
+.dc-spark .bars i:nth-child(3) { animation-delay: .16s } .dc-spark .bars i:nth-child(4) { animation-delay: .22s }
+.dc-spark .bars i:nth-child(5) { animation-delay: .28s } .dc-spark .bars i:nth-child(6) { animation-delay: .34s }
+.dc-spark .bars i:nth-child(7) { animation-delay: .40s; opacity: 1; }
+@keyframes barGrow { from { transform: scaleY(.06); opacity: 0; } to { transform: scaleY(1); } }
+
+/* --- 主行动按钮 --- */
+.dc-cta { margin-top: 12px; width: 100%; padding: 12px; border: none; border-radius: 16px;
+  cursor: pointer; background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  color: #2A1220; font-weight: 800; font-size: 13px; letter-spacing: .02em;
+  box-shadow: 0 12px 26px rgba(255, 143, 168, .32);
+  transition: transform .2s cubic-bezier(.22, 1, .36, 1), box-shadow .2s; }
+.dc-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(255, 143, 168, .45); }
+.dc-cta:active { transform: scale(.98); }
+
+/* --- 卡内漂浮光点 --- */
+#hzDeck .dcard.s0 { overflow: hidden; }
+.dc-orb { position: absolute; border-radius: 50%; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(255,143,168,.55) 60%, transparent 72%);
+  animation: orbFloat 9s ease-in-out infinite; }
+.dc-orb.o1 { width: 10px; height: 10px; left: 18%; bottom: 24%; animation-delay: 0s; }
+.dc-orb.o2 { width: 6px; height: 6px; left: 72%; bottom: 36%; animation-delay: -3s; }
+.dc-orb.o3 { width: 8px; height: 8px; left: 44%; bottom: 12%; animation-delay: -6s; }
+@keyframes orbFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  22% { opacity: .7; }
+  100% { transform: translateY(-90px) scale(.85); opacity: 0; }
+}
+
+/* ============================================================
+   独立聊天窗（拖出为单独窗口）+ 抽屉宽度拖拽
+   ============================================================ */
+
+/* 抽屉左缘拖拽把手 */
+.hz-chat-resize { position: absolute; left: -5px; top: 0; bottom: 0; width: 11px;
+  cursor: ew-resize; z-index: 6; }
+.hz-chat-resize::after { content: ''; position: absolute; left: 4px; top: 50%;
+  transform: translateY(-50%); width: 3px; height: 42px; border-radius: 3px;
+  background: rgba(255, 255, 255, .16); transition: background .2s; }
+.hz-chat-resize:hover::after { background: rgba(255, 143, 168, .75); }
+body.hz-resizing { cursor: ew-resize !important; user-select: none !important; }
+
+/* 聊天头部「弹出窗口」按钮 */
+#chat-popout { background: none; border: none; cursor: pointer; color: var(--text-sub);
+  font-size: 16px; padding: 6px; border-radius: 8px; }
+#chat-popout:hover { color: var(--rose, #FF8FA8); }
+
+/* 独立窗口模式：只留聊天，铺满整窗 */
+body.popout-chat { background: #121020 !important; }
+body.popout-chat #stage { display: block !important; }
+body.popout-chat #stage > *:not(#chat-page) { display: none !important; }
+body.popout-chat #chat-page {
+  position: fixed !important; inset: 0 !important; left: 0 !important; right: 0 !important;
+  width: 100% !important; max-width: none !important; transform: none !important;
+  visibility: visible !important; border-radius: 0 !important; border-left: 0 !important;
+  box-shadow: none !important; z-index: 10 !important;
+}
+body.popout-chat .chat-header { -webkit-app-region: drag; }
+body.popout-chat .chat-header button, body.popout-chat .chat-header #chat-popout { -webkit-app-region: no-drag; }
+body.popout-chat #chat-popout { display: none; }
+body.popout-chat .hz-chat-resize { display: none; }
+body.popout-chat .chat-header { padding-right: 84px; }  /* 给系统窗按钮留位 */
+
+/* ============================================================
+   v7.7 · 主角卡流式排版（修重叠）+ 数据区动态 + 聊天输入栏自适应
+   ============================================================ */
+
+/* ---------- A. 主角卡：chips 原来是绝对定位，会被新内容压住 ---------- */
+#hzDeck .dcard.s0 {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 22px 24px 18px; overflow: hidden;
+}
+#hzDeck .dcard.s0 .dc-top { flex: none; }
+#hzDeck .dcard.s0 .dc-live { margin: 4px 0 0; flex: none; }
+#hzDeck .dcard.s0 .dc-quote {
+  margin: 2px 0 0; flex: none; font-size: 13.5px; line-height: 1.7; opacity: .9;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+#hzDeck .dcard.s0 .dc-stats { margin: 0; flex: none; }
+#hzDeck .dcard.s0 .dc-spark { margin: 0; flex: none; }
+#hzDeck .dcard.s0 .dc-chips {
+  position: static; left: auto; right: auto; bottom: auto; margin: 0; flex: none;
+}
+#hzDeck .dcard.s0 .dc-cta { margin-top: auto; flex: none; }
+#hzDeck #hzDeck .dcard.s0 .dc-chips span { font-size: 10px; padding: 5px 10px; }
+
+/* 数值压缩，给下方留空间 */
+#hzDeck .dc-stat { padding: 7px 10px; border-radius: 14px; }
+#hzDeck .dc-stat b { font-size: 18px; }
+#hzDeck .dc-spark { padding: 10px 12px; border-radius: 16px; }
+#hzDeck .dc-spark .bars { height: 36px; margin-top: 8px; }
+
+/* ---------- B. 数据区动态 ---------- */
+#hzDeck .dc-stat { animation: statIn .5s cubic-bezier(.22, 1, .36, 1) backwards;
+  transition: transform .25s cubic-bezier(.22, 1, .36, 1), box-shadow .25s, border-color .25s; }
+#hzDeck .dc-stat:nth-child(1) { animation-delay: .05s }
+#hzDeck .dc-stat:nth-child(2) { animation-delay: .12s }
+#hzDeck .dc-stat:nth-child(3) { animation-delay: .19s }
+#hzDeck .dc-stat:hover { transform: translateY(-3px); border-color: rgba(255, 143, 168, .38);
+  box-shadow: 0 12px 24px rgba(6, 3, 14, .45); }
+@keyframes statIn { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+
+/* 数字走渐变字，滚动时更有质感 */
+#hzDeck .dc-stat b, #hzDeck .dc-spark .spark-hd b {
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+/* 最新一根柱子呼吸发光 */
+#hzDeck .dc-spark .bars i:last-child { animation: barGrow .75s cubic-bezier(.22, 1, .36, 1) both,
+  barPulse 2.6s ease-in-out 1.1s infinite; }
+@keyframes barPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.4) drop-shadow(0 0 8px rgba(255, 143, 168, .65)); }
+}
+/* 走势区扫光 */
+#hzDeck .dc-spark { position: relative; overflow: hidden; }
+#hzDeck .dc-spark::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 64px; left: -80px; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .1), transparent);
+  animation: sparkSweep 3.8s ease-in-out 1.4s infinite;
+}
+@keyframes sparkSweep { 0% { left: -80px; } 55%, 100% { left: calc(100% + 24px); } }
+
+/* ---------- C. 聊天输入栏：窄窗（独立聊天窗 / 窄抽屉）折成两行 ---------- */
+@media (max-width: 620px) {
+  #chat-inputbar { flex-wrap: wrap; row-gap: 8px; }
+  #chat-inputbar #chat-input { order: -1; flex: 1 1 100%; max-height: 74px; }
+  #chat-inputbar #chat-send { margin-left: auto; }
+}
+/* 「看看屏幕」原来带边框+文字，跟其它图标按钮不搭 → 统一成图标按钮 */
+#chat-look {
+  width: 38px; height: 38px; padding: 0 !important; border: 0 !important;
+  background: transparent !important; border-radius: 10px !important;
+  display: inline-flex !important; align-items: center; justify-content: center;
+  color: var(--text-sub) !important; cursor: pointer;
+  transition: background .18s, color .18s, transform .18s;
+}
+#chat-look span { display: none !important; }
+#chat-look:hover { background: rgba(255, 255, 255, .08) !important; color: var(--rose, #FF8FA8) !important; }
+#chat-look:active { transform: scale(.92); }
+/* 输入栏图标统一圆形悬停 */
+#chat-mic, #chat-image, #chat-sticker {
+  width: 38px !important; height: 38px !important; border-radius: 10px !important;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  color: var(--text-sub); transition: background .18s, color .18s, transform .18s;
+}
+#chat-mic:hover, #chat-image:hover, #chat-sticker:hover { background: rgba(255, 255, 255, .08); color: var(--rose, #FF8FA8); }
+#chat-mic:active, #chat-image:active, #chat-sticker:active { transform: scale(.92); }
+#chat-sticker svg { width: 20px; height: 20px; color: currentColor !important; }
+
+/* ============================================================
+   v7.8 · 输入栏按「抽屉自身宽度」响应（容器查询），不再用窗口宽度
+   ============================================================ */
+/* 之前用 @media(max-width:620px)：聊天抽屉是侧栏，窗口很宽时抽屉自己很窄，
+   媒体查询根本不命中 → 输入框被挤到换行。改成容器查询，按抽屉实际宽度判断。 */
+#chat-page { container-type: inline-size; }
+
+#chat-input { overflow: hidden; }           /* 任何情况下都不让文字溢出输入框 */
+
+@container (max-width: 520px) {
+  #chat-inputbar { flex-wrap: wrap; row-gap: 8px; }
+  #chat-input { order: -1; flex: 1 1 100%; min-width: 0; max-height: 74px; }
+  #chat-send { margin-left: auto; }
+}
+@container (max-width: 360px) {
+  #chat-mic, #chat-image, #chat-sticker, #chat-look { width: 34px !important; height: 34px !important; }
+  #chat-send { width: 48px; }
+}
+
+/* ============================================================
+   v7.9 · 全站「写死浅色」遗留组件统一暗化（一次性收口）
+   style.css 里还有一批 background:#fff / #F2F2F2 写死的旧组件，
+   在暖夜极光暗色下会突兀（白块、白按钮、浅色分隔线）。
+   这里按类别一次补齐。
+   ============================================================ */
+
+/* --- 底部弹层 & 动作面板 --- */
+#sheet input, #sheet textarea, #sheet select {
+  background: rgba(255, 255, 255, .06) !important; color: var(--text) !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important; border-radius: 12px;
+}
+.sheet .btn, .sheet .btn-plain { background: rgba(255, 255, 255, .07) !important;
+  color: var(--text) !important; border: 1px solid rgba(255, 255, 255, .1) !important; }
+.sheet .btn-primary { background: var(--grad, linear-gradient(135deg,#FF8FA8,#FFC39B)) !important;
+  color: #2A1220 !important; border-color: transparent !important; font-weight: 700; }
+.sheet .btn-danger { background: rgba(255, 107, 129, .14) !important; color: #FF8B9B !important;
+  border: 1px solid rgba(255, 107, 129, .32) !important; }
+.action-sheet .action-item, .sheet .action-item { background: rgba(255, 255, 255, .05) !important;
+  color: var(--text) !important; }
+.action-sheet .action-item:active { background: rgba(255, 255, 255, .1) !important; }
+
+/* --- chips / 分段控件 --- */
+.chip { background: rgba(255, 255, 255, .055) !important; color: var(--text) !important;
+  border: 1px solid rgba(255, 255, 255, .1) !important; }
+.seg { background: rgba(255, 255, 255, .05) !important; border-color: rgba(255, 255, 255, .08) !important; }
+.seg-btn { background: transparent !important; color: var(--text-sub) !important; }
+.chip.selected, .seg-btn.active {
+  background: var(--grad, linear-gradient(135deg,#FF8FA8,#FFC39B)) !important;
+  color: #2A1220 !important; border-color: transparent !important; font-weight: 700; }
+
+/* --- 聊天：引用条 / 图片预览 / 时间线 / 禁用发送 --- */
+#chat-quote, #chat-preview {
+  background: rgba(255, 255, 255, .06) !important; color: var(--text) !important;
+  border-color: rgba(255, 255, 255, .1) !important;
+}
+#chat-preview .pv-x, #chat-quote .pv-x {
+  background: rgba(255, 255, 255, .16) !important; color: var(--text) !important;
+}
+.time-divider::before, .time-divider::after { background: rgba(255, 255, 255, .12) !important; }
+#chat-send.disabled { background: rgba(255, 255, 255, .09) !important;
+  color: rgba(244, 241, 248, .38) !important; }
+
+/* --- 表单控件 --- */
+input[type="range"] { background: rgba(255, 255, 255, .14) !important; }
+input[type="range"]::-webkit-slider-thumb { background: #FFA6BC !important; border: 0 !important;
+  box-shadow: 0 2px 8px rgba(255, 143, 168, .5); }
+.switch .track, .toggle-slider { background: rgba(255, 255, 255, .18) !important; }
+.switch .thumb, .toggle-slider::before { background: #fff !important; }
+.switch input:checked + .track, .toggle-slider.on { background: var(--grad, #FF8FA8) !important; }
+
+/* --- 记忆库 / 日志页遗留 --- */
+.ms-op { background: rgba(255, 255, 255, .06) !important; color: var(--text) !important; }
+.ms-op.del { background: rgba(255, 107, 129, .15) !important; color: #FF8B9B !important; }
+.ms-op:hover { background: rgba(255, 255, 255, .11) !important; }
+.ms-add-menu-item:hover { background: rgba(255, 255, 255, .08) !important; }
+.lib-file { background: rgba(255, 255, 255, .055) !important; color: var(--text) !important; }
+.lib-progress-track { background: rgba(255, 255, 255, .12) !important; }
+.log-emotion-pill { background: rgba(255, 255, 255, .12) !important; color: var(--text) !important; }
+.log-emotion-flow { background: rgba(255, 255, 255, .05) !important; }
+.menu-ico { background: rgba(255, 255, 255, .06) !important; color: var(--text) !important; }
+.mem-day-count { background: rgba(255, 255, 255, .06) !important; color: var(--text-sub) !important; }
+.file-status { background: rgba(255, 255, 255, .06) !important; color: var(--text-sub) !important; }
+.report-full { background: rgba(255, 255, 255, .05) !important; color: var(--text) !important; }
+.intimacy-bar { background: rgba(255, 255, 255, .12) !important; }
+
+/* --- 资料页遗留 --- */
+.p-danger { background: rgba(255, 107, 129, .14) !important; color: #FF8B9B !important;
+  border-color: rgba(255, 107, 129, .3) !important; }
+.p-av-btn { background: rgba(255, 255, 255, .07) !important; color: var(--text) !important; }
+.p-hero, .p-card, .p-subtitle { background: rgba(255, 255, 255, .05) !important; color: var(--text) !important; }
+
+/* --- 陪伴选中态 --- */
+.cp-card.selected { background: rgba(255, 143, 168, .14) !important; border-color: rgba(255,143,168,.35) !important; }
+.cp-card-tag { background: rgba(255, 143, 168, .16) !important; color: #FFC7D6 !important; }
+.cp-life-icon { background: rgba(255, 255, 255, .07) !important; }
+.cp-life-row.selected { background: rgba(255, 143, 168, .12) !important; }
+.cp-life-row:active { background: rgba(255, 255, 255, .09) !important; }
+.cp-status-close { background: rgba(255, 255, 255, .08) !important; color: var(--text-sub) !important; }
+
+/* --- 待办 / 习惯勾选 --- */
+.todo-check, .habit-check { background: rgba(255, 255, 255, .1) !important;
+  border-color: rgba(255, 255, 255, .28) !important; }
+.todo-due { background: rgba(255, 255, 255, .08) !important; color: var(--text-sub) !important; }
+.todo-due.due-today { background: rgba(255, 195, 155, .16) !important; color: #FFC39B !important; }
+.todo-due.due-over { background: rgba(255, 107, 129, .16) !important; color: #FF8B9B !important; }
+.todo-del:active { background: rgba(255, 107, 129, .18) !important; }
+
+/* --- Agent / 表情选择 --- */
+.agent-btn.no { background: rgba(255, 255, 255, .07) !important; color: var(--text) !important; }
+.agent-trail-head:hover { background: rgba(255, 255, 255, .07) !important; }
+.emoji-grid button.selected { background: rgba(255, 143, 168, .18) !important; }
+
+/* ============================================================
+   v8.0 · 设计系统收口：排版层级 / 控件尺寸 / 交互态 / 焦点环 / 空状态
+   （横向扫一遍所有页面，统一「行高、字号、间距、按压缩放、焦点环」，
+     不再逐块打补丁）
+   ============================================================ */
+
+/* 1) 键盘焦点环（可访问性 + 精致感） */
+:focus-visible { outline: 2px solid rgba(255, 143, 168, .8); outline-offset: 2px; border-radius: 10px; }
+button:focus:not(:focus-visible), a:focus:not(:focus-visible),
+input:focus:not(:focus-visible), textarea:focus:not(:focus-visible) { outline: none; }
+
+/* 2) 设置行 / 资料行：统一高度、内边距、字号层级 */
+.setting-row, .hz-vslot .row { min-height: 52px; padding: 13px 16px !important; gap: 14px; align-items: center; }
+.row-label, .setting-row .row-label { font-size: 14px !important; font-weight: 600; letter-spacing: .01em; }
+.row-sub, .setting-row .row-sub { font-size: 11.5px !important; color: var(--text-sub) !important;
+  margin-top: 3px !important; line-height: 1.5; }
+.group-title { font-size: 12px !important; font-weight: 800; letter-spacing: .14em;
+  color: var(--text-sub) !important; text-transform: uppercase; }
+
+/* 3) 表单控件统一尺寸 / 圆角 */
+.hz-vslot input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.overlay input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.hz-vslot select, .overlay select {
+  min-height: 38px; border-radius: 12px !important; padding: 8px 12px !important; font-size: 13px;
+}
+.hz-vslot textarea, .overlay textarea { border-radius: 12px !important; }
+.hz-vslot input:focus, .overlay input:focus, .hz-vslot select:focus, .overlay select:focus,
+.hz-vslot textarea:focus, .overlay textarea:focus { border-color: rgba(255, 143, 168, .55) !important; }
+
+/* 4) 空状态：居中、留白、图标带柔光 */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 54px 20px !important; min-height: 220px; }
+.empty-state .empty-avatar, .empty-state > div:first-child {
+  font-size: 42px; line-height: 1; opacity: .95; margin: 0 !important;
+  filter: drop-shadow(0 10px 24px rgba(255, 143, 168, .38));
+}
+.empty-state > div { color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+.empty-state > .empty-avatar + div, .empty-state > div:nth-of-type(2) {
+  color: var(--ink); font-weight: 800; font-size: 15px;
+}
+
+/* 5) 行/卡按压反馈统一成玫瑰色 */
+.list-group .row:active, .setting-row:active, .hz-vslot .rec-item:active, .hz-vslot .ov-card:active {
+  background: rgba(255, 143, 168, .12) !important;
+}
+
+/* 6) 顶栏图标按钮微交互 */
+.ibtn { transition: transform .18s cubic-bezier(.22, 1, .36, 1), background .18s, color .18s !important; }
+.ibtn:hover { background: rgba(255, 255, 255, .08) !important; color: var(--ink) !important; }
+.ibtn:active { transform: scale(.9) !important; }
+
+/* 7) 提示条入场（只作用在显示态，避免常驻 DOM 被点亮） */
+.toast.show, .hz-toast.show { animation: toastIn .28s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+
+/* 8) 覆盖层入场更顺滑（原来只有 translateX） */
+.overlay.open { animation: ovIn .34s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes ovIn { from { opacity: 0; transform: translateX(18px) scale(.995); } to { opacity: 1; transform: none; } }
+#chat-page.open { animation: chatIn .38s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes chatIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+
+/* ============================================================
+   v8.1 · 实机走查后的问题修复（陪伴布局 / 功能对齐 / 记忆卡 / 细节）
+   ============================================================ */
+
+/* ---------- A. 陪伴页：「监督吃醋」那块被我自己的网格挤坏了 ---------- */
+/* .cp-mc 里有 5 个块（标题+开关 / 说明 / 阈值 / 间隔 / 按钮），
+   我之前把它设成 5 等分网格 → 每块只有 231px，数字输入框被压到只剩两位数。 */
+#page-companion .cp-mc {
+  display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px; align-items: center;
+}
+#page-companion .cp-mc > * { min-width: 0; }
+#page-companion .cp-mc > div:first-child {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 14px; padding-bottom: 2px;
+}
+#page-companion .cp-mc > .cp-mc-hint {
+  grid-column: 1 / -1; font-size: 11.5px; color: var(--text-sub); line-height: 1.7; margin-top: -4px;
+}
+#page-companion .cp-mc > div:not(:first-child):not(.cp-mc-hint) {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+  font-size: 12.5px; color: var(--text-sub); line-height: 1.6;
+}
+#page-companion .cp-mc input[type="number"] {
+  width: 74px !important; min-width: 74px; text-align: center; font-weight: 700;
+  font-size: 14px; color: var(--ink); padding: 7px 8px !important;
+}
+#page-companion .cp-mc input[type="checkbox"] { width: 18px; height: 18px; accent-color: #FF8FA8; }
+#page-companion .cp-mc > button.chip { grid-column: 1 / -1; justify-self: start; }
+
+/* 「生活陪伴」列表：两列，别再一行占满整宽 */
+#page-companion .cp-life-panel {
+  display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px; padding: 16px 18px;
+}
+#page-companion .cp-life-row { border-radius: 16px; }
+
+/* 「游戏陪伴」卡：改成左图标 + 右文字，卡片不再一大片空 */
+#page-companion .cp-card {
+  display: grid !important; grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-areas: 'ico name' 'ico desc'; align-items: center;
+  gap: 4px 14px; min-height: 104px !important; padding: 16px 18px !important;
+  text-align: left !important;
+}
+#page-companion .cp-card-icon {
+  grid-area: ico; width: 58px; height: 58px; border-radius: 18px; font-size: 26px;
+  display: flex; align-items: center; justify-content: center; margin: 0 !important;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .08);
+}
+#page-companion .cp-card-name { grid-area: name; font-size: 15px !important; font-weight: 800; margin: 0 !important; }
+#page-companion .cp-card-desc { grid-area: desc; font-size: 11.5px !important; color: var(--text-sub) !important;
+  line-height: 1.6; margin: 0 !important; }
+#page-companion .cp-card-tag { position: static !important; grid-column: 1 / -1; justify-self: start; margin: 6px 0 0 !important; }
+
+/* banner 原来是橄榄绿，换成暖夜极光 */
+#page-companion .cp-banner {
+  background: linear-gradient(120deg, rgba(255, 143, 168, .22), rgba(159, 140, 255, .14)) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+}
+#page-companion .cp-banner-title { font-weight: 900; letter-spacing: .01em; }
+#page-companion .cp-banner-sub { color: rgba(244, 241, 248, .72) !important; }
+
+@media (max-width: 1000px) {
+  #page-companion .cp-mc, #page-companion .cp-life-panel { grid-template-columns: 1fr !important; }
+}
+
+/* ---------- B. 功能页：两列卡片高度对齐，按钮沉底 ---------- */
+#page-features { align-items: stretch !important; }
+#page-features > .ov-card { display: flex; flex-direction: column; }
+#page-features > .ov-card > .pill-btn,
+#page-features > .ov-card > button { margin-top: auto; align-self: flex-start; }
+#page-features > .list-group { align-self: start; }
+
+/* ---------- C. 记忆卡：左侧强调条 + 更紧凑的头/脚 ---------- */
+.hz-vslot .mem-list { display: flex; flex-direction: column; gap: 12px; }
+.hz-vslot .mem-card {
+  position: relative; display: flex; flex-direction: column; gap: 8px;
+  padding: 15px 18px 15px 20px !important; border-radius: 20px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important; overflow: hidden;
+}
+.hz-vslot .mem-card::before {
+  content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px;
+  border-radius: 0 3px 3px 0; background: var(--grad, linear-gradient(135deg,#FF8FA8,#FFC39B)); opacity: .6;
+}
+.hz-vslot .mem-card-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hz-vslot .mem-card-head .mem-time, .hz-vslot .mem-card-head time { margin-left: auto; font-size: 11px; color: var(--faint, #6B6278); }
+.hz-vslot .mem-card-foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.hz-vslot .mem-card-foot button {
+  font-size: 11px; padding: 5px 11px; border-radius: 999px; cursor: pointer;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1);
+  color: var(--text-sub); transition: color .18s, border-color .18s, background .18s, transform .18s;
+}
+.hz-vslot .mem-card-foot button:hover { color: var(--rose, #FF8FA8);
+  border-color: rgba(255, 143, 168, .45); background: rgba(255, 143, 168, .1); }
+.hz-vslot .mem-card-foot button:active { transform: scale(.94); }
+.hz-vslot .mem-card:hover { border-color: rgba(255, 143, 168, .3) !important; }
+
+/* ---------- D. 总览 sparkline 柱子更精致 ---------- */
+#hzDeck .dc-spark .bars { align-items: flex-end; }
+#hzDeck .dc-spark .bars i {
+  opacity: .55; border-radius: 5px 5px 3px 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+#hzDeck .dc-spark .bars i:last-child { opacity: 1; }
+#hzDeck .dc-spark { border-bottom: 1px solid rgba(255, 255, 255, .07); }
+
+/* ---------- E. 功能页收尾：卡片动作按钮统一 + 不裁剪文字 ---------- */
+#page-features > .ov-card { overflow: visible !important; }
+#page-features > .ov-card > * { min-width: 0; }
+#page-features .ov-card > button,
+#page-features .ov-card .pill-btn,
+#page-features .ov-card .blind-cta {
+  margin-top: auto !important; align-self: flex-start;
+  padding: 8px 16px !important; border-radius: 999px !important;
+  background: rgba(255, 143, 168, .14) !important; color: #FFC7D6 !important;
+  border: 1px solid rgba(255, 143, 168, .34) !important;
+  font-size: 12px !important; font-weight: 700; cursor: pointer;
+  transition: background .18s, color .18s, transform .18s, border-color .18s;
+}
+#page-features .ov-card > button:hover,
+#page-features .ov-card .pill-btn:hover {
+  background: rgba(255, 143, 168, .24) !important; color: #fff !important;
+  border-color: rgba(255, 143, 168, .55) !important; transform: translateY(-1px);
+}
+#page-features .ov-card > button:active,
+#page-features .ov-card .pill-btn:active { transform: scale(.96); }
+#page-features .ov-card .blind-note { color: var(--faint, #6B6278) !important; font-size: 11px; }

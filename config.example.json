@@ -1,0 +1,5 @@
+{
+  "apiKey": "sk-在这里粘贴你的DeepSeek_API_Key",
+  "visionApiKey": "sk-在这里粘贴你的通义千问DashScope_API_Key（可选，用于发图片）",
+  "visionModel": "qwen-vl-max"
+}

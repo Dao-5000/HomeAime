@@ -1,0 +1,229 @@
+/* ============================================================
+   Homeaime · 记忆海样式（flow-mem.css）
+   ============================================================ */
+
+/* 顶部模式切换条 */
+.sea-modes {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 12px;
+}
+.sea-modes button {
+  padding: 7px 16px; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 700;
+  color: var(--text-sub, #A99FB6); background: rgba(255, 255, 255, .055);
+  border: 1px solid rgba(255, 255, 255, .1);
+  transition: color .18s, background .18s, border-color .18s, transform .18s;
+}
+.sea-modes button:hover { color: var(--ink, #F4F1F8); border-color: rgba(255, 143, 168, .4) }
+.sea-modes button:active { transform: scale(.96) }
+.sea-modes button.on {
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B));
+  color: #2A1220; border-color: transparent;
+}
+.sea-hint { font-size: 11px; color: var(--faint, #6B6278); margin-left: 6px; letter-spacing: .02em }
+
+/* 画布容器 */
+.sea-wrap {
+  position: relative; border-radius: 22px; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background:
+    radial-gradient(120% 90% at 22% 12%, rgba(255, 143, 168, .10), transparent 58%),
+    radial-gradient(110% 80% at 82% 88%, rgba(167, 139, 250, .12), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .01));
+}
+.sea-canvas { display: block; width: 100%; height: 420px; touch-action: none }
+.sea-canvas.grab { cursor: grabbing !important }
+
+/* 点击节点后的详情卡 */
+.sea-card {
+  /* ★ 原来用 absolute 钉在画布容器底部：画布比窗口高时，卡片会被挤到窗口下方看不见、点不到。
+     改成相对视口的固定定位，永远可见可点。 */
+  position: fixed; right: 24px; bottom: 104px; left: auto; width: min(420px, 64vw); max-width: none; z-index: 60;
+  padding: 13px 16px; border-radius: 16px; pointer-events: none;
+  background: rgba(20, 17, 30, .92); border: 1px solid rgba(255, 143, 168, .3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 40px rgba(5, 2, 12, .6);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .22s, transform .22s;
+}
+.sea-card.on { opacity: 1; transform: none }
+.sea-card .sc-type {
+  display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; letter-spacing: .08em;
+}
+.sea-card .sc-stars { color: #FFC39B; letter-spacing: .1em }
+.sea-card .sc-time { margin-left: auto; color: var(--text-sub, #A99FB6); font-weight: 600 }
+.sea-card .sc-text { margin-top: 7px; font-size: 13.5px; line-height: 1.65; color: var(--text, #F4F1F8) }
+
+/* 浅色主题 */
+body.light .sea-modes button { background: rgba(24, 18, 34, .05); border-color: rgba(24, 18, 34, .1); color: #6C6478 }
+body.light .sea-modes button:hover { color: #241F2E }
+body.light .sea-modes button.on { color: #fff }
+body.light .sea-wrap {
+  border-color: rgba(24, 18, 34, .1);
+  background:
+    radial-gradient(120% 90% at 22% 12%, rgba(228, 92, 136, .12), transparent 58%),
+    radial-gradient(110% 80% at 82% 88%, rgba(140, 120, 220, .12), transparent 60%),
+    #FFFFFF;
+}
+body.light .sea-card { background: rgba(255, 255, 255, .95); border-color: rgba(228, 92, 136, .35) }
+body.light .sea-card .sc-text { color: #241F2E }
+body.light .sea-card .sc-time { color: #6C6478 }
+
+/* ---------- 记忆页：左轨收窄降噪，把空间让给记忆海 ---------- */
+#page-memory .wk { grid-template-columns: 168px minmax(0, 1fr) !important; gap: 14px !important; }
+#page-memory .wk-side {
+  padding: 10px !important; border-radius: 18px !important;
+  background: rgba(255, 255, 255, .03) !important; border-color: rgba(255, 255, 255, .06) !important;
+}
+#page-memory .wk-side .mem-tab {
+  padding: 9px 12px !important; font-size: 12.5px !important; border-radius: 12px !important;
+}
+#page-memory .wk-side .mem-tab .hz-ico { width: 1em !important; height: 1em !important; margin-right: .3em }
+
+/* ---------- 详情卡：动作区可点 ---------- */
+.sea-card { pointer-events: none }
+.sea-card.on { pointer-events: auto }
+.sea-card .sc-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none }
+.sea-card .sc-type { display: flex; align-items: center; gap: 8px }
+.sea-card .sc-acts { display: flex; gap: 8px; margin-top: 11px }
+.sea-card .sc-b {
+  padding: 6px 13px; border-radius: 999px; cursor: pointer; font-family: inherit;
+  font-size: 11.5px; font-weight: 700; color: var(--text-sub, #A99FB6);
+  background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12);
+  transition: background .16s, color .16s, border-color .16s, transform .16s;
+}
+.sea-card .sc-b:hover { background: rgba(255, 143, 168, .16); color: #fff; border-color: rgba(255, 143, 168, .45) }
+.sea-card .sc-b:active { transform: scale(.95) }
+.sea-card .sc-b.danger { color: #FF8B9B; border-color: rgba(255, 107, 129, .3) }
+.sea-card .sc-b.danger:hover { background: rgba(255, 107, 129, .2); color: #fff }
+
+body.light #page-memory .wk-side { background: rgba(24, 18, 34, .03) !important; border-color: rgba(24, 18, 34, .08) !important }
+body.light .sea-card .sc-b { background: rgba(24, 18, 34, .06); border-color: rgba(24, 18, 34, .12); color: #6C6478 }
+body.light .sea-card .sc-b:hover { background: rgba(228, 92, 136, .14); color: #241F2E }
+
+/* ============================================================
+   记忆页布局 v3：参照总览底部 Dock —— 顶部居中胶囊
+   ============================================================ */
+
+/* 左轨 → 顶部居中胶囊（单列，不再占左侧一大块） */
+#page-memory .wk { grid-template-columns: minmax(0, 1fr) !important; gap: 0 !important; align-items: start; }
+#page-memory .wk-side {
+  position: static !important; display: flex; flex-direction: row; justify-content: center;
+  width: fit-content; margin: 0 auto 16px !important; padding: 7px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .055) !important;
+  border: 1px solid rgba(255, 255, 255, .1) !important;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 16px 38px rgba(6, 3, 14, .55), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+#page-memory .wk-side .mem-tabs { flex-direction: row !important; gap: 6px !important; margin: 0 !important; }
+#page-memory .wk-side .mem-tab {
+  width: auto !important; padding: 9px 18px !important; border-radius: 999px !important;
+  font-size: 12.5px !important; background: transparent !important;
+  border: 1px solid transparent !important; color: var(--text-sub) !important;
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1), background .22s, color .22s, box-shadow .22s;
+}
+#page-memory .wk-side .mem-tab:hover { transform: translateY(-2px); color: var(--ink) !important }
+#page-memory .wk-side .mem-tab.active {
+  background: var(--grad, linear-gradient(135deg, #FF8FA8, #FFC39B)) !important;
+  color: #2A1220 !important; font-weight: 800 !important; border-color: transparent !important;
+  box-shadow: 0 10px 24px rgba(255, 143, 168, .42);
+}
+#page-memory .wk-side .mem-tab .ico { font-size: 13px }
+
+/* 工具条（搜索 + 角色 chips + 重评）居中成一排 */
+#page-memory .mem-toolbar {
+  /* ★ 模块里 .mem-toolbar 是 flex-direction:column；不改方向的话，
+     下面给搜索框设的 flex-basis 会变成「高度」，搜索框被撑到 380px 高、把海挤没。 */
+  display: flex !important; flex-direction: row !important; flex-wrap: wrap;
+  align-items: center; justify-content: center;
+  gap: 10px !important; padding: 0 !important; background: transparent !important;
+}
+#page-memory .mem-search { flex: 0 1 380px; min-width: 220px }
+#page-memory .mem-char-chips { justify-content: center }
+
+/* 模式切换：细分段，居中；提示单独一行 */
+#page-memory .sea-modes { flex-wrap: wrap; justify-content: center; row-gap: 6px; margin-bottom: 14px !important }
+#page-memory .sea-hint { flex-basis: 100%; text-align: center; margin: 2px 0 0 !important; opacity: .75 }
+
+/* 记忆海面板：整宽、圆角更大、内嵌一层柔光 */
+#page-memory .sea-wrap {
+  border-radius: 26px !important;
+  box-shadow: 0 26px 60px rgba(6, 3, 14, .55), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+/* 统计条也居中 */
+#page-memory .mem-hero { text-align: center }
+#page-memory .mem-hero .mh-row { justify-content: center; gap: 34px }
+
+/* 列表视图（记忆库）：卡片更像样本卡 */
+.hz-vslot .mem-list { max-width: 940px; margin: 0 auto; }
+.hz-vslot .mem-card {
+  border-radius: 18px !important; padding: 14px 18px 14px 22px !important; gap: 7px !important;
+}
+.hz-vslot .mem-card-head > span:first-child {
+  font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 3px 10px; border-radius: 999px;
+  background: rgba(255, 143, 168, .14); color: #FFC7D6;
+}
+.hz-vslot .mem-card-head .mem-importance { color: #FFC39B; letter-spacing: .1em; font-size: 12px }
+
+/* ============================================================
+   记忆页布局 v4：整页不滚动，海面板自适应剩余高度
+   （原来海在滚动容器里，拖右侧滚动条整块海会跟着滚走）
+   ============================================================ */
+/* 只有「记忆海」模式才锁死整页滚动；列表/日报/导入导出 模式照常可滚（否则内容会被裁掉） */
+.hz-view.on .hz-vslot:has(#page-memory.mem-sea) { overflow: hidden !important; padding-bottom: 6px !important; }
+#page-memory { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+#page-memory .wk { flex: 1; min-height: 0; align-items: stretch !important; }
+#page-memory .wk-main { min-height: 0; height: 100%; }
+#page-memory .mem-body { display: flex; flex-direction: column; min-height: 0; height: 100%; }
+#page-memory .sea-wrap { flex: 1 1 auto; min-height: 300px; }
+#page-memory .sea-canvas { height: 100% !important; }
+/* 列表视图时让列表自己滚动 */
+#page-memory.mem-mode-list .mem-list { overflow: auto; }
+
+/* 详情卡：右上角关闭 + 已有自动隐藏逻辑 */
+.sea-card .sc-x {
+  position: absolute; right: 8px; top: 8px; width: 22px; height: 22px; line-height: 1;
+  border: 0; border-radius: 50%; cursor: pointer; color: var(--text-sub, #A99FB6);
+  background: rgba(255, 255, 255, .08); font-size: 12px;
+}
+.sea-card .sc-x:hover { background: rgba(255, 143, 168, .22); color: #fff; }
+
+/* 记忆海模式：去掉重复的统计块，把数字并进模式行，海面板吃掉剩余高度（整页刚好一屏） */
+#page-memory.mem-sea .mem-hero { display: none !important; }
+#page-memory .sea-wrap { flex: 1 1 auto !important; min-height: 0 !important; }
+#page-memory .sea-modes { margin-bottom: 10px !important; }
+#page-memory .mem-toolbar { margin: 0 0 10px !important; }
+.sea-stats { font-size: 11px; color: var(--faint, #6B6278); letter-spacing: .02em; margin-left: 10px }
+.sea-stats b { color: var(--ink); font-family: var(--latin); font-weight: 800 }
+
+/* 网格第二行必须吃掉剩余高度，否则 .wk-main 不撑开、海面板会被压成 0 */
+#page-memory .wk { grid-template-rows: auto minmax(0, 1fr) !important; align-items: stretch !important; }
+#page-memory .wk-side { align-self: start }
+#page-memory .wk-main { min-height: 0 !important }
+
+/* 顶部 chrome 收紧，把高度让给记忆海 */
+#page-memory .wk-side { padding: 6px 8px !important; margin-bottom: 10px !important; }
+#page-memory .wk-side .mem-tab { padding: 8px 16px !important; }
+#page-memory .sea-modes { margin-bottom: 8px !important; }
+#page-memory .sea-hint { display: none !important; }   /* 提示改放标题旁，省一行高度 */
+#page-memory .mem-toolbar { margin: 0 0 8px !important; }
+#page-memory .mem-search { flex: 0 1 360px; min-width: 200px; height: 38px !important; }
+
+/* 列表模式：记忆页整页不滚动，所以必须让「列表自己内部滚动」
+   （之前写的是 .mem-mode-list，实际类名是 mem-sea，所以规则从没生效 → 只能看到两条、翻不下去） */
+#page-memory:not(.mem-sea) .mem-list {
+  flex: 1 1 auto !important; min-height: 0 !important;
+  overflow-y: auto !important; padding-right: 6px;
+  max-width: 940px; width: 100%; margin: 0 auto;
+}
+#page-memory:not(.mem-sea) .mem-toolbar { flex: none }
+#page-memory:not(.mem-sea) .mem-pager { flex: none; margin-top: 8px }
+
+/* ★ 列表卡片不能被压扁：模块的 .mem-list 是 flex 列，卡片默认 flex-shrink:1，
+   高度受限时会被逐条压到 20 来 px、文字全被裁掉（看起来像"只剩一条条白线"）。 */
+#page-memory .mem-list > .mem-card,
+#page-memory .mem-list > .mem-spine { flex: 0 0 auto !important; }
+#page-memory .mem-list > .mem-card { height: auto !important; min-height: 86px; }
+
+/* 非记忆海模式：整个内容区允许滚动（列表内部滚，其它 tab 如「导入导出」也能滚完） */
+#page-memory:not(.mem-sea) .mem-body { overflow-y: auto; }

@@ -1,0 +1,58 @@
+# ---- 密钥与隐私：绝不入库 ----
+config.json
+*.config.json
+!config.example.json
+.env
+*.key
+*.pem
+
+# ---- 运行数据 ----
+backend/data/
+user_data/
+*.db
+*.sqlite
+*.sqlite3
+记忆库/
+外置记忆库/
+朋友圈/
+角色配置/
+screen_captures/
+
+# ---- 日志 ----
+*.log
+backend/*.log*
+
+# ---- 依赖与构建产物 ----
+node_modules/
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+build/
+dist/
+release*/
+launcher_build/
+launcher_dist/
+backend/build/
+backend/dist/
+
+# ---- 大二进制与模型 ----
+*.exe
+*.zip
+*.bin
+*.onnx
+*.pt
+*.pth
+backend/models/
+backend/tts_cache/
+tts_cache/
+voice_clone_models/
+rvc_dataset/
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*

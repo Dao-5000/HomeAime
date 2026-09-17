@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homeaime</title>
+<meta name="theme-color" content="#F4F4F2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260913-flow5">
+<link rel="stylesheet" href="css/flow.css?v=20260913-flow5">
+<link rel="stylesheet" href="css/flow-adapter.css?v=20260913-flow5">
+<link rel="stylesheet" href="css/flow7.css?v=20260913-flow7">
+<link rel="stylesheet" href="css/flow-ui.css?v=20260914-v9">
+<link rel="stylesheet" href="css/flow-mem.css?v=20260914-v9">
+<link rel="stylesheet" href="css/flow-agent.css?v=20260916-v5">
+</head>
+<body>
+<div id="stage">
+  <div class="bg-word">H</div>
+  <div class="blob"></div>
+  <svg width="0" height="0" style="position:absolute"><defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a2 2 0 0 1-2 2h-4v-6h-4v6H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4A3.5 3.5 0 0 0 6 7.5c-1.6.4-2.7 1.7-2.7 3.4 0 1 .4 1.9 1 2.5-.4.6-.6 1.3-.6 2A3.4 3.4 0 0 0 7 18.9c.4 1.3 1.6 2.1 3 2.1 1.1 0 2-.5 2.5-1.3V4.9C12 4.3 10.9 4 9.5 4z"/><path d="M14.5 4A3.5 3.5 0 0 1 18 7.5c1.6.4 2.7 1.7 2.7 3.4 0 1-.4 1.9-1 2.5.4.6.6 1.3.6 2A3.4 3.4 0 0 1 17 18.9c-.4 1.3-1.6 2.1-3 2.1-1.1 0-2-.5-2.5-1.3"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 12 2.5-6h5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/><path d="M15.5 5.4a3.2 3.2 0 0 1 0 5.9M17.8 14.6c1.6.7 2.6 2.1 3 4.4"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 9 12 4 20 4c0 8-5 15-15 15z"/><path d="M5 19c2-5 6-9 10-11"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.4"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.8 10.6a13 13 0 0 0 6.6 6.6l2-2c.3-.3.7-.4 1-.3 1 .4 2.2.6 3.4.6.6 0 1 .4 1 1V19c0 .6-.4 1-1 1C10.8 20 4 13.2 4 4.2c0-.6.4-1 1-1h2.5c.6 0 1 .4 1 1 0 1.2.2 2.3.6 3.4.1.3 0 .7-.3 1z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h9M19 6h1M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="16" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 1 1 10.5 4 6.5 6.5 0 0 0 20 13.5z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M20 4L4 11l6 2.5L12.5 20z"/><path d="M20 4l-10 9.5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.7L19.5 10l-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.3z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C7 16.5 3 13 3 8.8 3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 4.2-4 7.7-9 12.2z"/></symbol>
+  </defs></svg>
+  <div class="topbar st" style="--i:0">
+    <div class="brand"><div class="mark"><svg viewBox="0 0 64 64" style="width:22px;height:22px;display:block"><path d="M13 31L32 14l19 17" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 28v22h26V28" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 46c-4.4-3.1-7-5.4-7-8.6 0-2.3 1.8-4 4-4 1.2 0 2.3.6 3 1.6.7-1 1.8-1.6 3-1.6 2.2 0 4 1.7 4 4 0 3.2-2.6 5.5-7 8.6z" fill="currentColor" stroke="none"/></svg></div><div class="bt">HOMEAIME<br>COMPANION OS</div></div>
+    <div class="top-right">
+      <button class="ibtn" id="hzCmdkBtn" title="Ctrl+K">⌘K</button>
+      <button class="ibtn" id="hzSetBtn" title="设置"><svg class="ico"><use href="#i-sliders"/></svg></button>
+      <button class="ibtn" id="hzMoonBtn" title="暗色模式"><svg class="ico"><use href="#i-moon"/></svg></button>
+      <div class="greet-block" style="margin:0"><div class="g-meta" style="margin-left:0"><div class="clock" id="hzClock">--:--</div><div class="date" id="hzDate"></div></div></div>
+      <!-- 桌面端最小化/关闭按钮由 pc_enhance 注入到这里（app.js 切页会清空它，pc_enhance 会重注入） -->
+      <span id="topbar-right"></span>
+    </div>
+  </div>
+  <div class="greet-block st" style="--i:1"><div class="g1" id="hzGreet"></div><div class="g2" id="hzNick"></div></div>
+  <div class="ov-grid st" style="--i:2">
+    <div class="deck-zone"><div class="deck" id="hzDeck"></div><div class="deck-hint"><b>← →</b> <span>点击卡片切换伴侣 · 点卡片开始聊天</span></div></div>
+    <div class="bento" id="hzBento"></div>
+  </div>
+  <div class="dock st" style="--i:5">
+    <button class="d-it on" data-v="overview"><svg class="ico"><use href="#i-home"/></svg><span>总览</span></button>
+    <button class="d-it" data-v="memory"><svg class="ico"><use href="#i-brain"/></svg><span>记忆</span></button>
+    <button class="d-it" data-v="agent"><svg class="ico"><use href="#i-spark"/></svg><span>干活</span></button>
+    <button class="hz-fab" id="hzFab"><svg class="ico"><use href="#i-plus"/></svg></button>
+    <button class="d-it" data-v="companion"><svg class="ico"><use href="#i-pulse"/></svg><span>陪伴</span></button>
+    <button class="d-it" data-v="persona"><svg class="ico"><use href="#i-users"/></svg><span>她们</span></button>
+  </div>
+  <div class="hz-fan" id="hzFan">
+    <button class="f-it" style="--d:0" data-v="life"><svg class="ico"><use href="#i-leaf"/></svg><span>生活</span></button>
+    <button class="f-it" style="--d:1" data-v="moments"><svg class="ico"><use href="#i-cam"/></svg><span>朋友圈</span></button>
+    <button class="f-it" style="--d:2" data-v="records"><svg class="ico"><use href="#i-folder"/></svg><span>记录</span></button>
+    <button class="f-it" style="--d:3" data-v="features"><svg class="ico"><use href="#i-grid"/></svg><span>功能</span></button>
+  </div>
+  <div style="display:none">
+    <section id="page-overview"></section><section id="page-persona"></section><section id="page-memory"></section><section id="page-life"></section><section id="page-moments"></section><section id="page-companion"></section><section id="page-records"></section><section id="page-features"></section><section id="page-agent"></section>
+  </div>
+  <!-- ===== 旧版覆盖层容器（功能容器，由皮肤层 Flow 化） ===== -->
+<section id="chat-page" class="overlay closed">
+    <div id="chat-placeholder">
+      <div class="ph-logo">💬</div>
+      <div class="ph-title">AI 伴侣</div>
+      <div class="ph-sub">从左侧选择一个伴侣开始聊天</div>
+    </div>
+    <header class="chat-header" id="chat-header">
+      <button id="chat-back" aria-label="返回">‹</button>
+      <div class="chat-header-center" id="chat-header-center">
+        <div id="chat-title"></div>
+        <div id="chat-subtitle"></div>
+      </div>
+      <button id="chat-mem" aria-label="查看记忆" title="查看 TA 的全部记忆（也可以在聊天里发\"显示全部记忆\"）">📚</button>
+      <button id="chat-learn" aria-label="她学到了什么" title="她学到了什么 / 她整理了什么（可撤回）">🎓</button>
+      <button id="chat-call" aria-label="语音通话" title="语音通话"
+        onclick="VoiceCall.start()"
+        style="background:none;border:none;cursor:pointer;padding:6px;color:var(--text-sub);">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+        </svg>
+      </button>
+      <button id="chat-more" aria-label="更多">⋯</button>
+    </header>
+    <div id="chat-body"></div>
+    <div id="chat-inputbar">
+      <div id="chat-preview" class="hidden"></div>
+      <div id="chat-quote" class="hidden"></div>
+      <button id="chat-mic" aria-label="语音输入">
+        <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+      </button>
+      <button id="chat-image" aria-label="发送图片">
+        <svg viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v8l4-4 3 3 3-4 5 5V6H5zm4 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/></svg>
+      </button>
+      <textarea id="chat-input" rows="1" placeholder="请输入消息"></textarea>
+      <button id="chat-send" class="disabled">发送</button>
+      <input type="file" id="chat-image-input" accept="image/*" hidden>
+    </div>
+  </section>
+
+  <!-- 伴侣资料与设置页（覆盖层） -->
+  <section id="profile-page" class="overlay">
+    <header class="profile-header">
+      <button id="profile-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">资料与设置</div>
+      <button id="profile-done">完成</button>
+    </header>
+    <div id="profile-body"></div>
+  </section>
+
+  <!-- 记忆日志页（覆盖层） -->
+  <section id="logs-page" class="overlay">
+    <header class="profile-header">
+      <button id="logs-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">记忆日志</div>
+      <button id="logs-gen">立即生成</button>
+    </header>
+    <div id="logs-body"></div>
+  </section>
+
+  <!-- 关系档案页（覆盖层） -->
+  <section id="archive-page" class="overlay">
+    <header class="profile-header">
+      <button id="archive-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">关系档案</div>
+      <button id="archive-done">完成</button>
+    </header>
+    <div id="archive-body"></div>
+  </section>
+
+  <!-- 外置记忆库（覆盖层） -->
+  <section id="extmem-page" class="overlay">
+    <header class="profile-header">
+      <button id="extmem-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">外置记忆库</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="extmem-export" aria-label="导出">📤</button>
+        <button id="extmem-refresh" aria-label="刷新">↻</button>
+      </div>
+    </header>
+    <div id="extmem-body"></div>
+  </section>
+
+  <!-- 记忆存储页（覆盖层） -->
+  <section id="memstore-page" class="overlay">
+    <header class="profile-header">
+      <button id="memstore-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">记忆存储</div>
+      <button id="memstore-done">完成</button>
+    </header>
+    <div id="memstore-body"></div>
+  </section>
+
+  <!-- 学习档案页（覆盖层）：她学到了什么 + 她整理了什么（可撤回）
+       ★ 2026-09-17 新增。用户拍板"允许她自己整理，但每次改动要留痕、可查、可一键撤回"。
+         后端：GET /api/memory/audit、POST /api/memory/audit/revert、GET /api/learning/status -->
+  <section id="learn-page" class="overlay">
+    <header class="profile-header">
+      <button id="learn-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">她学到了什么</div>
+      <button id="learn-done">完成</button>
+    </header>
+    <div id="learn-body"></div>
+  </section>
+
+  <!-- 全局设置页（覆盖层） -->
+  <section id="settings-page" class="overlay">
+    <header class="profile-header">
+      <button id="settings-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">全局设置</div>
+      <button id="settings-done">完成</button>
+    </header>
+    <div id="settings-body"></div>
+  </section>
+
+  <!-- 自我觉察页（覆盖层） -->
+  <section id="selfaware-page" class="overlay">
+    <header class="profile-header">
+      <button id="selfaware-back" aria-label="返回">‹</button>
+      <div class="profile-header-title">自我觉察</div>
+      <button id="selfaware-done">完成</button>
+    </header>
+    <div id="selfaware-body"></div>
+  </section>
+
+  <!-- 弹层 -->
+  <div id="sheet-mask" class="mask"></div>
+  <div id="sheet" class="sheet"></div>
+
+  <!-- 轻提示 -->
+  <div id="toast" class="toast"></div>
+
+  <!-- 应用内消息到达通知（唯一弹窗：仅聚焦且会话未打开时显示，避免打扰） -->
+  <div id="inapp-notify" class="inapp-notify" role="button" aria-label="打开聊天">
+    <div class="in-app-avatar" id="inAppAvatar"></div>
+    <div class="in-app-body">
+      <div class="in-app-name" id="inAppName"></div>
+      <div class="in-app-text" id="inAppText"></div>
+    </div>
+    <button class="in-app-close" id="inAppClose" type="button" aria-label="关闭">✕</button>
+  </div>
+
+  <!-- 全屏进度层 -->
+  <div id="progress-overlay" class="hidden">
+    <div class="progress-card">
+      <div class="progress-spinner"></div>
+      <div id="progress-stage" class="progress-stage">处理中…</div>
+      <div id="progress-label" class="progress-label"></div>
+      <div id="progress-time" class="progress-time">已等待 0 秒</div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- 老壳层页面容器：新壳层不再使用，但 pc_enhance 等模块仍把覆盖页挂在 #app 上，
+      缺失会让「AI 内核设置」创建失败。保留为空容器（样式见 flow-adapter.css）。 -->
+  <div id="app"></div>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="chatpanel" id="chatpanel">
+    <div class="cp-hd"><div class="avatar" id="cpAv">晚</div><div style="flex:1;min-width:0"><div class="cp-nm" id="cpNm"></div><div class="cp-st" id="cpSt"></div></div><div class="cp-acts"><button class="cp-act" onclick="VoiceCall.start()"><svg class="ico"><use href="#i-phone"/></svg></button><button class="cp-act" onclick="closeHzChat()"><svg class="ico" style="transform:rotate(45deg)"><use href="#i-plus"/></svg></button></div></div>
+    <div class="cp-body" id="cpBody"></div>
+    <div class="cp-ft"><div class="cp-in"><input id="cpInput" placeholder="和她说点什么…"><button class="send" onclick="hzSend()"><svg class="ico"><use href="#i-send"/></svg></button></div></div>
+  </aside>
+  <div class="toast" id="hzToast"></div>
+</div>
+<script src="js/web-compat.js" defer></script>
+<script src="js/notify-core.js" defer></script>
+<script src="js/internal-msg-core.js" defer></script>
+<script src="js/session.js" defer></script>
+<script src="js/personas.js" defer></script>
+<script src="js/store.js" defer></script>
+<script src="js/rel_ui.js" defer></script>
+<script src="js/proactive-core.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/chatlist.js" defer></script>
+<script src="js/contacts.js" defer></script>
+<script src="js/chat_stream.js" defer></script>
+<script src="js/texture.js" defer></script>
+<script src="js/chat.js" defer></script>
+<!-- ★ 2026-09-16 用户要求「她到底被哪些规则管着」要能在 App 里查：右下角常驻入口（只读） -->
+<script src="js/prompt_audit.js" defer></script>
+<script src="js/asr_input.js" defer></script>
+<script src="js/profile.js" defer></script>
+<script src="js/logs.js" defer></script>
+<script src="js/archive.js" defer></script>
+<script src="js/extmemory.js" defer></script>
+<script src="js/memstore.js" defer></script>
+<script src="js/reminders.js" defer></script>
+<script src="js/overview.js" defer></script>
+<script src="js/memory.js" defer></script>
+<script src="js/learn.js" defer></script>
+<script src="js/life.js" defer></script>
+<script src="js/moments.js" defer></script>
+<script src="js/companion.js" defer></script>
+<script src="js/records.js" defer></script>
+<script src="js/selfaware.js" defer></script>
+<script src="js/songs.js" defer></script>
+<script src="js/features.js" defer></script>
+<script src="js/settings.js" defer></script>
+<script src="js/ws_client.js" defer></script>
+<script src="js/voice_call.js" defer></script>
+<script src="js/pc_ptt.js" defer></script>
+<script src="js/voice_clone_panel.js" defer></script>
+<script src="js/call_history_panel.js" defer></script>
+<script src="js/incoming_call.js" defer></script>
+<script src="js/pc_enhance.js" defer></script>
+<script src="js/flow-app.js" defer></script>
+<script src="js/agent_window.js?v=20260916-v7" defer></script>
+<script src="js/flow-adapter.js?v=20260913" defer></script>
+<script src="js/flow7.js?v=20260913-flow7" defer></script>
+<script src="js/flow-ui.js?v=20260914-v9" defer></script>
+<script src="js/flow-mem.js?v=20260914-v9" defer></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+  "name": "ai-companion-pc",
+  "productName": "HomeAime",
+  "version": "1.0.0",
+  "description": "AI 陪伴 PC 桌面版（原网页前端 + 本地 FastAPI 后端 + Electron）",
+  "main": "electron-main.js",
+  "author": "local",
+  "license": "MIT",
+  "scripts": {
+    "backend": "backend\\venv\\Scripts\\python.exe run.py",
+    "start": "electron .",
+    "kill-port": "node scripts/kill-port.js",
+    "dev": "node scripts/kill-port.js && electron .",
+    "build:backend": "cd backend && venv\\Scripts\\pyinstaller.exe --clean --noconfirm pc_backend.spec",
+    "dist": "electron-builder --win",
+    "postinstall": "electron-builder install-app-deps",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.local.aicompanion",
+    "productName": "HomeAime",
+    "directories": {
+      "output": "release_new"
+    },
+    "files": [
+      "electron-main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend/dist/pc_backend.exe",
+        "to": "backend/pc_backend.exe"
+      },
+      {
+      "from": "public",
+      "to": "public"
+      },
+      {
+        "from": "记忆库",
+        "to": "记忆库"
+      },
+      {
+        "from": "角色配置",
+        "to": "角色配置"
+      },
+      {
+        "from": "backend/characters",
+        "to": "backend/characters"
+      },
+      {
+        "from": "表情包",
+        "to": "表情包"
+      },
+      {
+        "from": "模板",
+        "to": "模板"
+      },
+      {
+        "from": "minecraft_bot",
+        "to": "minecraft_bot",
+        "filter": ["**/*", "!node_modules/**"]
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false,
+      "target": [
+        { "target": "dir", "arch": ["x64"] },
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "icon": "public/icons/HomeAime.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false
+    }
+  }
+}

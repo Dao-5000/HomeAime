@@ -1,0 +1,187 @@
+/* ============================================================
+   Homeaime · flow5 接入层 — 暖夜极光（最小安全覆盖）
+   只改颜色/token/渐变，不改布局属性 → flow.css 排版原样保留
+   回滚＝删掉本文件 + index.html 里 flow5 两行引用
+   ============================================================ */
+
+/* ---------- Token 覆盖（浅色 :root → 暖夜极光 · 深色为默认） ---------- */
+:root{
+  --bg:#121020 !important; --bg2:#171423 !important;
+  --card:rgba(255,255,255,.055) !important;
+  --ink:#F4F1F8 !important; --ink2:#E6E1EC !important;
+  --sub:#A99FB6 !important; --faint:#6B6278 !important;
+  --line:rgba(255,255,255,.1) !important; --soft:rgba(255,255,255,.07) !important;
+  --text-sub:#A99FB6 !important;
+  --sh:0 24px 60px -28px rgba(8,4,18,.55), inset 0 1px 0 rgba(255,255,255,.07) !important;
+  --sh2:0 40px 90px -32px rgba(8,4,18,.7), inset 0 1px 0 rgba(255,255,255,.12) !important;
+  --rose:#FF8FA8; --peach:#FFC39B; --vio:#9F8CFF;
+  --grad:linear-gradient(135deg,#FF8FA8 0%,#FFC39B 100%);
+  --acc:#FF9FB0; --acc-ink:#2A1220;
+}
+body.dark{
+  --bg:#121020 !important; --card:rgba(255,255,255,.055) !important;
+  --ink:#F4F1F8 !important; --ink2:#E6E1EC !important;
+  --sub:#A99FB6 !important; --faint:#6B6278 !important;
+  --line:rgba(255,255,255,.1) !important; --soft:rgba(255,255,255,.07) !important;
+  --text-sub:#A99FB6 !important;
+  --sh:0 30px 70px -30px rgba(8,4,18,.65), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  --sh2:0 44px 90px -32px rgba(8,4,18,.8), inset 0 1px 0 rgba(255,255,255,.13) !important;
+  background:#121020 !important;
+}
+
+/* ---------- 氛围层 ---------- */
+body::before{ content:""; position:fixed; inset:-22%; z-index:0; pointer-events:none;
+  filter:blur(80px); opacity:.55;
+  background:
+   radial-gradient(420px 420px at 14% 16%,rgba(255,143,168,.32),transparent 65%),
+   radial-gradient(520px 520px at 86% 10%,rgba(159,140,255,.28),transparent 65%),
+   radial-gradient(560px 480px at 76% 90%,rgba(255,195,155,.22),transparent 65%),
+   radial-gradient(460px 460px at 26% 94%,rgba(159,140,255,.15),transparent 65%);
+  animation:aurora 24s ease-in-out infinite alternate }
+body.dark::before{ opacity:.65 }
+@keyframes aurora{ from{transform:translate(0,0) rotate(0deg) scale(1)}
+  50%{transform:translate(-46px,34px) rotate(4deg) scale(1.1)}
+  to{transform:translate(38px,-28px) rotate(-3deg) scale(1.05)} }
+body::after{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 42%,transparent 58%,rgba(5,2,12,.5) 100%) }
+
+/* ---------- 品牌与点缀色 ---------- */
+.topbar .brand .mark{ background:var(--grad); color:#2A1220; border-radius:10px 10px 10px 3px;
+  box-shadow:0 10px 26px -10px rgba(255,143,168,.6) }
+.greet-block .g2{ color:transparent; -webkit-text-stroke:2px var(--ink) }
+.greet-block .g1{ color:var(--ink) }
+.ibtn{ background:var(--soft); border:1px solid var(--line); color:var(--sub); border-radius:999px }
+.ibtn:hover{ color:var(--ink); border-color:var(--faint) }
+.ov-grid .deck-hint b{ color:var(--rose) }
+
+/* ---------- Deck 卡 → 玻璃玫瑰 ---------- */
+.dcard{ background:var(--card); border:1px solid var(--line); color:var(--ink);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  box-shadow:var(--sh); border-radius:28px 28px 28px 74px }
+.dcard.hero{ background:linear-gradient(160deg,rgba(255,143,168,.14),rgba(159,140,255,.1));
+  border-color:rgba(255,143,168,.25); color:var(--ink); box-shadow:var(--sh2) }
+.dcard .avatar{ background:var(--grad); color:#2A1220;
+  border-radius:46% 54% 56% 44%/48% 44% 56% 52%;
+  animation:hz-blob 9s ease-in-out infinite;
+  box-shadow:0 14px 34px -12px rgba(255,143,168,.55) }
+@keyframes hz-blob{ 0%,100%{border-radius:46% 54% 56% 44%/48% 44% 56% 52%}
+  33%{border-radius:56% 44% 44% 56%/44% 56% 44% 56%} 66%{border-radius:50% 50% 44% 56%/56% 50% 50% 44%} }
+.dcard .dc-chips span{ background:var(--soft); border:1px solid var(--line); color:var(--ink) }
+.dcard .dc-foot .go{ background:var(--grad); color:#2A1220 }
+.dcard .dc-foot .sync i{ background:var(--grad) }
+.dcard .dc-st{ color:var(--sub) }
+.dcard .dc-quote{ color:var(--ink) }
+
+/* ---------- Bento 磁贴 → 玻璃 ---------- */
+.tile{ background:var(--card); border:1px solid var(--line); color:var(--ink);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  box-shadow:var(--sh); border-radius:28px }
+.tile.dark-tile{ background:var(--grad); color:#2A1220; border-color:transparent;
+  box-shadow:0 20px 50px -16px rgba(255,143,168,.5) }
+.tile.dark-tile .t-label{ color:rgba(42,18,32,.7) }
+.tile.dark-tile .s-t,.tile.dark-tile .s-d{ color:#2A1220 }
+.tile.dark-tile .bars i{ background:rgba(42,18,32,.35) }
+.tile .t-label{ color:var(--rose) }
+.tile .ring .rv{ stroke:url(#gWarm); filter:drop-shadow(0 0 8px rgba(255,143,168,.45)) }
+.tile .ring .rt{ stroke:var(--line2) }
+.tile .ring .mid .v{ color:var(--ink) }
+.tile .ring .mid .k{ color:var(--sub) }
+.tile .bars i{ background:var(--grad); opacity:.3 }
+.tile .bars i:last-child{ opacity:1 }
+.hz-tl-dot{ border-color:var(--faint) }
+.hz-tl-row.done .hz-tl-dot{ background:var(--grad); border-color:transparent }
+.hz-tl-due{ color:var(--rose) }
+.mq-chip{ background:var(--soft); border:1px solid var(--line); color:var(--ink) }
+
+/* ---------- Dock → 玫瑰玻璃 ---------- */
+.dock{ background:var(--soft); border:1px solid var(--line); backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px); box-shadow:var(--shadow-hi) }
+.d-it{ color:var(--sub) }
+.d-it.on{ background:var(--grad); color:#2A1220; box-shadow:0 10px 26px -8px rgba(255,143,168,.6) }
+.d-it:hover{ color:var(--ink) }
+.hz-fab{ background:var(--grad); color:#2A1220; box-shadow:0 16px 36px -10px rgba(255,143,168,.65) }
+.hz-fan .f-it{ background:var(--card); border:1px solid var(--line); color:var(--ink); backdrop-filter:blur(16px) }
+.hz-fan .f-it:hover{ background:var(--grad); color:#2A1220 }
+.hz-fan.open .f-it{ pointer-events:auto }
+
+/* ---------- 通用元件色 ---------- */
+.pill-btn{ background:var(--grad); color:#2A1220; border:none }
+.pill-btn.ghost{ background:var(--soft); color:var(--ink); border:1px solid var(--line2) }
+.chip{ background:var(--soft); border:1px solid var(--line2); color:var(--sub) }
+.chip.on{ background:var(--grad); color:#2A1220; border-color:transparent }
+.hz-cmd{ background:var(--soft); border:1px solid var(--line2); color:var(--sub) }
+.hz-cmd.hot{ background:var(--grad); color:#2A1220; border-color:transparent }
+.hz-cmds .hz-cmd.hot{ box-shadow:0 8px 22px -8px rgba(255,143,168,.5) }
+.hz-tl-due{ color:var(--rose) }
+.hz-jealous .tgl{ background:var(--grad) }
+.hz-jealous .tgl.off{ background:var(--line2) }
+.searchbar{ background:var(--soft); border:1px solid var(--line2); border-radius:999px }
+.hz-view .v-eyebrow{ color:var(--rose) }
+.hz-view .v-title{ font-style:italic }
+
+/* ---------- hz-view 渲染器表面 ---------- */
+.hz-memgrid,.hz-linkgrid,.hz-hers,.hz-life{ gap:14px }
+.hz-count,.hz-dist,.hz-mem2,.hz-gcard,.hz-np,.hz-npwrap{ background:var(--card);
+  border:1px solid var(--line); color:var(--ink); backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px); box-shadow:var(--sh); border-radius:24px 24px 24px 60px }
+.hz-np{ border-radius:30px 30px 30px 74px }
+.hz-pcard{ border-radius:30px 30px 30px 8px }
+.hz-pcard.hero-p{ background:var(--grad); color:#2A1220; border-color:transparent }
+.hz-pcard .p-nm{ color:inherit }
+.hz-pcard .p-st,.hz-pcard .sn{ color:var(--sub) }
+.hz-pcard .avatar{ background:var(--grad); color:#2A1220; border-radius:44% 54% 56% 44% }
+.hz-pcard.hero-p .avatar{ background:rgba(42,18,32,.15); color:inherit }
+.hz-pcard .p-bio{ color:var(--sub) }
+.hz-pcard .prow .pl{ color:var(--sub) }
+.hz-pcard .prow .latin{ color:var(--ink) }
+.hz-pcard.hero-p .prow .latin{ color:#2A1220 }
+.hz-pcard.hero-p .prow .pl{ color:rgba(42,18,32,.6) }
+.hz-gcard .act{ background:var(--grad); color:#2A1220 }
+.hz-gcard .act.off{ background:var(--line2); color:var(--sub) }
+.hz-gcard .gn{ color:var(--ink) }
+.hz-gcard .gs{ color:var(--sub) }
+.hz-cmd.hot{ background:var(--grad); color:#2A1220; border-color:transparent }
+.hz-jealous .tgl{ background:var(--grad) }
+.hz-jealous .tgl.off{ background:var(--line2) }
+.hz-jealous .d{ color:var(--sub) }
+.hz-jealous .d b{ color:var(--ink) }
+.hz-np-t{ color:var(--ink) }
+.hz-np-s{ color:var(--sub) }
+.hz-np-wave .wave-live i{ background:var(--grad) }
+.hz-np-op{ background:var(--soft); border:1px solid var(--line2); color:var(--ink); border-radius:12px }
+.hz-np-play{ background:var(--grad); color:#2A1220 }
+.hz-drow .db{ background:var(--glass2); border:1px solid var(--line) }
+.hz-drow .db i{ background:var(--grad) }
+.hz-drow .dv{ color:var(--sub) }
+.hz-drow .dn{ color:var(--ink) }
+.hz-count .big{ color:var(--ink) }
+.hz-mem2 .tx{ color:var(--ink) }
+.hz-mem2 .tm{ color:var(--sub) }
+.hz-mem2 .type{ color:var(--rose) }
+.hz-mem2 .type i{ background:var(--grad); border-color:transparent }
+.hz-mem2 .type i.hollow{ background:transparent; border:1.5px solid var(--rose) }
+.hz-mem2 .stars{ color:var(--rose) }
+.hz-mem2 .sn{ color:var(--faint) }
+
+/* ---------- 聊天面板 / 覆盖层 ---------- */
+.chatpanel{ background:var(--bg2); border-left:1px solid var(--line) }
+.chatpanel .bubble{ background:var(--card); border:1px solid var(--line); color:var(--ink) }
+.chatpanel .cmsg.me .bubble{ background:var(--grad); color:#2A1220; border-color:transparent }
+.chatpanel .cm-time{ color:var(--faint) }
+.chatpanel .cp-nm{ color:var(--ink) }
+.chatpanel .cp-st{ color:var(--rose) }
+.chatpanel .voice{ background:var(--card); border:1px solid var(--line) }
+.chatpanel .voice .v-wave i{ background:var(--rose) }
+.chatpanel .send{ background:var(--grad); color:#2A1220 }
+.chatpanel .cp-in textarea{ background:var(--card); border:1px solid var(--line2); color:var(--ink) }
+.chatpanel .cp-in textarea:focus{ border-color:var(--rose) }
+#chat-page{ background:var(--bg) }
+#chat-page .chat-msg .bubble{ background:var(--card); border:1px solid var(--line); color:var(--ink) }
+#chat-page .chat-msg.me .bubble{ background:var(--grad); color:#2A1220; border-color:transparent }
+.overlay,#settings-page,#profile-page,#logs-page,#archive-page,#extmem-page,#memstore-page,#selfaware-page{
+  background:var(--bg) }
+#settings-page .set-label,#settings-page .sl b{ color:var(--ink) }
+#settings-page .sl i,#settings-page .set-desc{ color:var(--sub) }
+
+/* ---------- toast ---------- */
+.toast,.hz-toast{ background:var(--grad); color:#2A1220 }

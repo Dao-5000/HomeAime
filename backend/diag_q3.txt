@@ -1,0 +1,5 @@
+[Stream] AIEmotionEngine ���سɹ�
+[2026-09-02T19:13:20.984Z] [MAIN] [Python] [OneBot] NapCat ������
+[2026-09-02T19:16:20.583Z] [MAIN] [Python] [OneBot] ���ӶϿ�: (1005, None)
+[2026-09-02T19:16:39.333Z] [MAIN ERROR] [Python ERR] [MultiTurn] once ����ʧ��: ConnectError: ConnectError('[Errno 11001] getaddrinfo failed')
+[2026-09-02T19:17:06.450Z] [MAIN] [Python] [OneBot] ����ʧ��: [Errno 11001] getaddrinfo failed
