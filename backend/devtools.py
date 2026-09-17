@@ -25,7 +25,7 @@ from . import config as _config
 if getattr(sys, "frozen", False):
     ROOT = os.path.abspath(os.environ.get(
         "HOMEAIME_SOURCE_ROOT",
-        r"D:\AI聊天项目桌面端\AI聊天项目"))
+        r"%~dp0"))
 else:
     ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

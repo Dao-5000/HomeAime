@@ -11,7 +11,7 @@
   ② 取消**只有 API**（/api/pc/task/delete），聊天里说「取消」没有任何路径；
      连 agent 自己的 cancel_task 工具都只 UPDATE open_loops，根本不碰 tasks 表。
 
-跑法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+跑法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py batch7
 """
 import asyncio

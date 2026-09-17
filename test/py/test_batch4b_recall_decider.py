@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第 4b 批「两段式按需翻库」回归测试（红-绿）。
 
-跑法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+跑法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py batch4
 """
 import os

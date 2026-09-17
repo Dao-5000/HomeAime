@@ -7,7 +7,7 @@ rem  · 此 bat 仅做：检查 server 是否在跑 + 打开浏览器
 rem  · 如果 server 没在跑，再用此 bat 一键启动
 rem ============================================
 chcp 65001 >nul
-cd /d "D:\AI聊天项目"
+cd /d "%~dp0"
 
 echo.
 echo ==================================================
@@ -31,7 +31,7 @@ if %errorlevel%==0 (
   echo     直接打开浏览器...
 ) else (
   echo [*] server 没在跑，启动中...
-  wmic process call create "cmd.exe /c node server.js", "D:\AI聊天项目" >nul 2>&1
+  wmic process call create "cmd.exe /c node server.js", "%~dp0" >nul 2>&1
   if %errorlevel% neq 0 (
     echo     (wmic 不可用，回退到 start /B)
     start "AI Server" /B cmd /c "node server.js"
@@ -47,7 +47,7 @@ if %errorlevel%==0 (
   )
   if %COUNT% geq 8 (
     echo [错误] 8 秒内 3000 端口未监听
-    echo        请手动跑: cd /d D:\AI聊天项目 ^&^& node server.js
+    echo        请手动跑: cd /d %~dp0 ^&^& node server.js
     pause
     exit /b 1
   )

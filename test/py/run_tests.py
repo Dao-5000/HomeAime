@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """零依赖测试运行器（不需要 pytest）。
 
-用法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+用法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py            # 跑全部
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py batch1     # 只跑匹配关键字的文件
 

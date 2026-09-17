@@ -250,7 +250,7 @@ function showBackendDownDialog(detail) {
    改了 public\ 下的界面文件（如 profile.js 新增档位）根本不生效（实测踩过这个坑）。
    这里让壳自己镜像：按 大小/mtime 增量拷贝；**不删除**目标端多余文件（保守，避免误删）。
    只对开发机（硬编码路径存在）生效，其他机器静默跳过。 */
-const PUB_SRC = 'D:\\AI聊天项目桌面端\\AI聊天项目\\public';
+const PUB_SRC = '<PROJECT_ROOT>\\public';
 
 function syncPublicDir() {
   try {
@@ -301,7 +301,7 @@ async function startBackend() {
     //   双击桌面图标直接生效——这里检测打包产物比包体内的新就自动替换，
     //   无需手动拷贝 exe。路径不存在（其他机器）时静默跳过。
     try {
-      const srcExe = 'D:\\AI聊天项目桌面端\\AI聊天项目\\backend\\dist\\pc_backend.exe';
+      const srcExe = '<PROJECT_ROOT>\\backend\\dist\\pc_backend.exe';
       if (fs.existsSync(srcExe)) {
         const sStat = fs.statSync(srcExe);
         const dStat = fs.existsSync(exe) ? fs.statSync(exe) : null;
@@ -380,7 +380,7 @@ async function startBackend() {
 /* ---------- CosyVoice 本地 TTS 服务（9881）拉起/看护 ----------
    与 backend/tts.py 的 COSYVOICE_API 约定一致；打包版不跑 run.py，
    必须由主进程自己拉起。开发版 run.py 也会拉起，这里检测已监听则跳过（幂等）。 */
-const COSYVOICE_DIR  = process.env.COSYVOICE_DIR  || 'D:\\CosyVoice';
+const COSYVOICE_DIR  = process.env.COSYVOICE_DIR  || '<COSYVOICE_HOME>';
 const COSYVOICE_PY   = process.env.COSYVOICE_PY   || path.join(COSYVOICE_DIR, '.venv', 'Scripts', 'python.exe');
 const COSYVOICE_PORT = Number(process.env.COSYVOICE_PORT) || 9881;
 let cosyvoiceProc = null;

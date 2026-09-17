@@ -58,7 +58,7 @@ def _candidates():
         os.environ.get("COSYVOICE_HOME", ""),
         os.path.join(root, "CosyVoice"),
         os.path.join(os.path.dirname(root), "CosyVoice"),
-        r"D:\CosyVoice",
+        r"%COSYVOICE_HOME%",
     ]
 
 

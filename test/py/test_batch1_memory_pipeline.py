@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第 1 批「记忆链路地基」回归测试（红-绿）。
 
-跑法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+跑法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe -m pytest test\\py\\test_batch1_memory_pipeline.py -q
 
 ★ 隔离：import backend.* 之前先把 AI_COMPANION_DATA_DIR 指到 pytest 临时目录，

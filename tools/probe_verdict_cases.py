@@ -8,7 +8,7 @@ import os
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(r"D:\AI聊天项目桌面端\AI聊天项目")
+PROJECT_ROOT = Path(r"%~dp0")
 sys.path.insert(0, str(PROJECT_ROOT))
 os.environ["AI_COMPANION_DATA_DIR"] = str(Path(os.environ["APPDATA"]) / "HomeAime" / "data")
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")

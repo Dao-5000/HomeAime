@@ -90,7 +90,7 @@ print()
 print("=" * 76)
 print("③ 运行版能力指纹（哪些修复已经在你用的这版里）")
 print("=" * 76)
-exe = Path(r"D:\AI聊天项目桌面端\AI聊天项目\release_new\win-unpacked\resources\backend\pc_backend.exe")
+exe = Path(r"%~dp0\release_new\win-unpacked\resources\backend\pc_backend.exe")
 if exe.exists():
     print(f"打包 exe: {exe.stat().st_size} 字节  mtime={datetime.fromtimestamp(exe.stat().st_mtime):%Y-%m-%d %H:%M:%S}")
 trace_dir = DATA / "trace"

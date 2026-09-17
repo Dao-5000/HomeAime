@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1240" viewBox="0 0 1680 1240" font-family="Helvetica Neue, Arial, Microsoft YaHei, PingFang SC, Noto Sans SC, sans-serif">
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6b82"/>
+    </marker>
+    <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2d6cdf"/>
+    </marker>
+    <style>
+      .t     { font-size: 19px; fill: #1a1a1a; }
+      .tw    { font-size: 19px; fill: #ffffff; font-weight: 700; }
+      .h     { font-size: 22px; fill: #1f3b63; font-weight: 700; }
+      .lbl   { font-size: 15px; fill: #5a6b82; }
+      .sm    { font-size: 14px; fill: #6a6a6a; }
+      .bx    { fill: #ffffff; stroke: #c9d6ef; stroke-width: 2; rx: 10; }
+      .bxA   { fill: #eef3fb; stroke: #2d6cdf; stroke-width: 2; rx: 10; }
+      .bxD   { fill: #1f3b63; stroke: #1f3b63; stroke-width: 2; rx: 10; }
+      .bxW   { fill: #f7f9fc; stroke: #a8b8d0; stroke-width: 2; rx: 10; }
+      .zone  { fill: #fbfcfe; stroke: #dde5f0; stroke-width: 1.5; rx: 14; stroke-dasharray: 7 5; }
+      .ln    { stroke: #5a6b82; stroke-width: 2.2; fill: none; marker-end: url(#arw); }
+      .lnA   { stroke: #2d6cdf; stroke-width: 2.4; fill: none; marker-end: url(#arwA); }
+      .zt    { font-size: 15px; fill: #8895a8; font-weight: 700; letter-spacing: 1px; }
+      .badge { font-size: 13px; fill: #2d6cdf; }
+    </style>
+  </defs>
+
+  <rect width="1680" height="1240" fill="#ffffff"/>
+  <text x="60" y="48" class="h">HomeAime · 系统架构</text>
+  <text x="60" y="74" class="sm">AI 情感陪伴桌面应用　|　后端 232 个 Python 模块 / 8.3 万行，前端 45 个 JS 模块，163 个接口，约 40 张数据表</text>
+
+  <!-- ================= 客户端层 ================= -->
+  <rect x="60" y="100" width="1090" height="176" class="zone"/>
+  <text x="82" y="126" class="zt">客户端层 · ELECTRON 桌面端</text>
+
+  <rect x="82" y="142" width="300" height="112" class="bxD"/>
+  <text x="102" y="174" class="tw">Electron 主进程</text>
+  <text x="102" y="202" fill="#cfe0ff" font-size="15">窗口 / 托盘 / 快捷键</text>
+  <text x="102" y="226" fill="#cfe0ff" font-size="15">子进程编排（后端 · TTS）</text>
+
+  <rect x="414" y="142" width="330" height="112" class="bxA"/>
+  <text x="434" y="174" class="h">渲染进程（聊天界面）</text>
+  <text x="434" y="202" class="sm">原生 JS · 微信风格会话</text>
+  <text x="434" y="226" class="sm">SSE 流式消费 · 打字机渲染</text>
+
+  <rect x="776" y="142" width="352" height="112" class="bxW"/>
+  <text x="796" y="174" class="t">preload（contextBridge）</text>
+  <text x="796" y="202" class="sm">contextIsolation 开启</text>
+  <text x="796" y="226" class="sm">枚举式最小 API 暴露面</text>
+
+  <!-- IPC 连接 -->
+  <path d="M 382 198 L 410 198" class="ln"/>
+  <text x="330" y="278" class="badge">IPC invoke / send</text>
+  <path d="M 744 198 L 772 198" class="ln"/>
+
+  <!-- ================= 后端层 ================= -->
+  <path d="M 579 256 L 579 300" class="lnA"/>
+  <text x="592" y="284" class="badge">HTTP / SSE</text>
+
+  <rect x="60" y="304" width="1090" height="150" class="zone"/>
+  <text x="82" y="330" class="zt">服务层 · FASTAPI（异步）</text>
+
+  <rect x="330" y="346" width="440" height="90" class="bxD"/>
+  <text x="352" y="380" class="tw">FastAPI 异步服务</text>
+  <text x="352" y="406" fill="#cfe0ff" font-size="15">163 个接口 · 会话隔离 · 流式端点</text>
+
+  <rect x="82" y="346" width="228" height="90" class="bx"/>
+  <text x="102" y="378" class="t">会话编排</text>
+  <text x="102" y="402" class="sm">多角色 / 多会话</text>
+
+  <rect x="790" y="346" width="338" height="90" class="bx"/>
+  <text x="810" y="378" class="t">上下文装配</text>
+  <text x="810" y="402" class="sm">22 维度按优先级 · 12000 字预算</text>
+
+  <!-- ================= 能力模块层 ================= -->
+  <path d="M 550 454 L 550 500" class="lnA"/>
+
+  <rect x="60" y="504" width="1090" height="230" class="zone"/>
+  <text x="82" y="530" class="zt">业务能力 · 核心子系统</text>
+
+  <rect x="82" y="548" width="196" height="164" class="bxA"/>
+  <text x="100" y="578" class="h">长期记忆</text>
+  <text x="100" y="604" class="sm">三层记忆架构</text>
+  <text x="100" y="626" class="sm">向量 + 关键词</text>
+  <text x="100" y="648" class="sm">混合检索 0.65/0.35</text>
+  <text x="100" y="670" class="sm">五因子排序</text>
+  <text x="100" y="692" class="sm">摘要块只追加不改写</text>
+
+  <rect x="296" y="548" width="196" height="164" class="bxA"/>
+  <text x="314" y="578" class="h">主动陪伴</text>
+  <text x="314" y="604" class="sm">闲置状态机</text>
+  <text x="314" y="626" class="sm">6 类 41 条切入角度</text>
+  <text x="314" y="648" class="sm">每日上限 8 条</text>
+  <text x="314" y="670" class="sm">静默窗口 300s</text>
+  <text x="314" y="692" class="sm">相似度去重闸门</text>
+
+  <rect x="510" y="548" width="196" height="164" class="bxA"/>
+  <text x="528" y="578" class="h">意图与安全</text>
+  <text x="528" y="604" class="sm">两级意图识别</text>
+  <text x="528" y="626" class="sm">正则初筛 + 模型判定</text>
+  <text x="528" y="648" class="sm">置信度硬门 60</text>
+  <text x="528" y="670" class="sm">不可逆操作</text>
+  <text x="528" y="692" class="sm">fail-closed</text>
+
+  <rect x="724" y="548" width="196" height="164" class="bxA"/>
+  <text x="742" y="578" class="h">关系与情绪</text>
+  <text x="742" y="604" class="sm">亲密度 5 阶段</text>
+  <text x="742" y="626" class="sm">12 种情绪状态</text>
+  <text x="742" y="648" class="sm">13 档差异化衰减</text>
+  <text x="742" y="670" class="sm">干预策略 + 效果回采</text>
+  <text x="742" y="692" class="sm">窗口监督（只读标题）</text>
+
+  <rect x="938" y="548" width="190" height="164" class="bxA"/>
+  <text x="956" y="578" class="h">语音链路</text>
+  <text x="956" y="604" class="sm">faster-whisper</text>
+  <text x="956" y="626" class="sm">→ 大模型生成</text>
+  <text x="956" y="648" class="sm">→ CosyVoice3</text>
+  <text x="956" y="670" class="sm">分块回推</text>
+  <text x="956" y="692" class="sm">多级 TTS 降级</text>
+
+  <!-- ================= LLM 网关 ================= -->
+  <path d="M 550 734 L 550 782" class="lnA"/>
+
+  <rect x="60" y="786" width="1090" height="128" class="zone"/>
+  <text x="82" y="812" class="zt">模型接入层 · 统一网关</text>
+
+  <rect x="330" y="826" width="440" height="72" class="bxD"/>
+  <text x="352" y="856" class="tw">LLM 网关（全项目流量收敛于 2 个入口）</text>
+  <text x="352" y="882" fill="#cfe0ff" font-size="15">熔断 3 次/300s · 分档超时 30/180/60s · 跨 Provider 兜底</text>
+
+  <rect x="82" y="826" width="228" height="72" class="bx"/>
+  <text x="102" y="856" class="t">模型分级</text>
+  <text x="102" y="880" class="sm">生成层用主脑</text>
+
+  <rect x="790" y="826" width="338" height="72" class="bx"/>
+  <text x="810" y="856" class="t">Token 记账</text>
+  <text x="810" y="880" class="sm">调用点维度 · 成本告警</text>
+
+  <!-- ================= 外部模型 ================= -->
+  <path d="M 470 914 L 470 952" class="ln"/>
+  <path d="M 640 914 L 640 952" class="ln"/>
+
+  <rect x="352" y="956" width="230" height="66" class="bxW"/>
+  <text x="372" y="986" class="t">DeepSeek</text>
+  <text x="372" y="1008" class="sm">主通道（生成层）</text>
+
+  <rect x="600" y="956" width="230" height="66" class="bxW"/>
+  <text x="620" y="986" class="t">GLM</text>
+  <text x="620" y="1008" class="sm">兜底 / 后台杂活</text>
+
+  <!-- ================= 存储 ================= -->
+  <rect x="352" y="1046" width="478" height="66" class="bx"/>
+  <text x="372" y="1076" class="t">SQLite　约 40 张数据表</text>
+  <text x="372" y="1098" class="sm">会话 · 消息 · 记忆 · 关系 · 情绪 · 人格 · 知识图谱 · 定时任务</text>
+
+  <path d="M 550 1022 L 550 1042" class="ln"/>
+
+  <!-- ================= 右侧：横切关注点 ================= -->
+  <rect x="1190" y="100" width="430" height="1012" class="zone"/>
+  <text x="1212" y="126" class="zt">横切关注点</text>
+
+  <rect x="1212" y="146" width="386" height="216" class="bxA"/>
+  <text x="1232" y="178" class="h">稳定性</text>
+  <text x="1232" y="208" class="sm">provider 级熔断器（closed/open/half-open）</text>
+  <text x="1232" y="232" class="sm">分档硬超时：机械 30s / 长档 180s</text>
+  <text x="1232" y="256" class="sm">流式首包 60s · 中途卡死 90s</text>
+  <text x="1232" y="280" class="sm">失败自动切 Provider 重试一次</text>
+  <text x="1232" y="304" class="sm">真实事故：单次挂起 900s 打满连接池</text>
+  <text x="1232" y="334" class="badge">把「慢」当成比「错」更危险的故障</text>
+
+  <rect x="1212" y="382" width="386" height="216" class="bxA"/>
+  <text x="1232" y="414" class="h">可观测性</text>
+  <text x="1232" y="444" class="sm">每回合结构化埋点（JSONL，5 类记录）</text>
+  <text x="1232" y="468" class="sm">判定时写入设置快照，避免用今天配置</text>
+  <text x="1232" y="492" class="sm">解释昨天的行为</text>
+  <text x="1232" y="516" class="sm">一键生成 10 项自动诊断报告</text>
+  <text x="1232" y="540" class="sm">相似度/复读率/长度分位等质量红线</text>
+  <text x="1232" y="570" class="badge">先量再改：合规率 25% 是量出来的</text>
+
+  <rect x="1212" y="618" width="386" height="216" class="bxA"/>
+  <text x="1232" y="650" class="h">成本治理</text>
+  <text x="1232" y="680" class="sm">先补记账，再定位浪费</text>
+  <text x="1232" y="704" class="sm">提示词语义等价压缩 −32%</text>
+  <text x="1232" y="728" class="sm">（2,887 → 1,966 token / 轮）</text>
+  <text x="1232" y="752" class="sm">机械抽取改本地规则，归零 LLM 调用</text>
+  <text x="1232" y="776" class="sm">压缩后核对 48/48 条硬规则零缺失</text>
+  <text x="1232" y="806" class="badge">无法度量就无法优化</text>
+
+  <rect x="1212" y="854" width="386" height="238" class="bxA"/>
+  <text x="1232" y="886" class="h">质量与验收</text>
+  <text x="1232" y="916" class="sm">红-绿范式：注入错误实现 → 测试变红</text>
+  <text x="1232" y="940" class="sm">→ 还原 → 变绿，证明测试不是假的</text>
+  <text x="1232" y="964" class="sm">控制确认闸门：12 用例 / 182 条断言</text>
+  <text x="1232" y="988" class="sm">打包产物逐文件 SHA256 比对</text>
+  <text x="1232" y="1012" class="sm">（前端 61/61 文件与产物一致）</text>
+  <text x="1232" y="1036" class="sm">只读证明：工具未改动被分析文件</text>
+  <text x="1232" y="1066" class="badge">改动必须留下可回归的证据</text>
+
+  <!-- 连接：横切作用到服务层 -->
+  <path d="M 1190 254 L 1154 254" class="lnA" stroke-dasharray="6 4"/>
+  <text x="1120" y="247" class="badge" text-anchor="end">作用于全链路</text>
+</svg>

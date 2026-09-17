@@ -16,7 +16,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-PROJECT_ROOT = Path(r"D:\AI聊天项目桌面端\AI聊天项目")
+PROJECT_ROOT = Path(r"%~dp0")
 sys.path.insert(0, str(PROJECT_ROOT))
 _REAL = Path(os.environ["APPDATA"]) / "HomeAime" / "data"
 os.environ["AI_COMPANION_DATA_DIR"] = str(_REAL)

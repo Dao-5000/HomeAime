@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第 3 批「整理 / 提炼 / 遗忘」回归测试（红-绿）。
 
-跑法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+跑法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py batch3
 """
 import os

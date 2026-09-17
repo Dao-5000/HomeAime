@@ -235,7 +235,7 @@ class Scheduler:
                 os.environ.get("COSYVOICE_HOME", ""),
                 os.path.join(root, "CosyVoice"),
                 os.path.join(os.path.dirname(root), "CosyVoice"),
-                r"D:\CosyVoice",
+                r"%COSYVOICE_HOME%",
             ]
             _cv_dir = next((p for p in candidates if p and os.path.isdir(p)), "")
             _cv_py  = os.path.join(_cv_dir, ".venv", "Scripts", "python.exe") if _cv_dir else ""

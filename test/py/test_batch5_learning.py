@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第 5 批「AI 学习闭环」回归测试（红-绿）。
 
-跑法（在 D:\\AI聊天项目桌面端\\AI聊天项目 下）：
+跑法（在 <PROJECT_ROOT> 下）：
     backend\\venv\\Scripts\\python.exe test\\py\\run_tests.py batch5
 """
 import ast

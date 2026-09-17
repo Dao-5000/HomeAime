@@ -1,5 +1,18 @@
 {
-  "apiKey": "sk-在这里粘贴你的DeepSeek_API_Key",
-  "visionApiKey": "sk-在这里粘贴你的通义千问DashScope_API_Key（可选，用于发图片）",
-  "visionModel": "qwen-vl-max"
+  "_说明": "复制本文件为 config.json 后填写。config.json 已被 .gitignore 排除，密钥不会入库。",
+
+  "api_key": "<在这里粘贴你的 DeepSeek API Key，必填>",
+  "zhipu_api_key": "<可选：智谱 GLM Key。用于主通道故障时的自动兜底降级>",
+  "dashscope_api_key": "<可选：通义千问 DashScope Key。发图片给 AI 时需要>",
+
+  "CURRENT_CHAT_MODEL": "deepseek-chat",
+  "SELECTED_MODEL": "deepseek-chat",
+  "MEMORY_EXTRACT_MODEL": "deepseek-chat",
+  "UNDERSTANDING_MODEL": "deepseek-chat",
+
+  "VISION_PROVIDER": "dashscope",
+  "VISION_MODEL": "qwen-vl-max",
+
+  "TEXT_MODELS": {},
+  "VISION_MODELS": {}
 }

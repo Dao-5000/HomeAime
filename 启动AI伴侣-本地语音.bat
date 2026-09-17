@@ -9,8 +9,8 @@ rem  Then: npm start for desktop app, or browser http://localhost:3000
 rem ============================================================
 
 set "ROOT=%~dp0"
-set "COSY_DIR=D:\CosyVoice"
-set "PY311=C:\Users\15215\AppData\Local\Programs\Python\Python311\python.exe"
+set "COSY_DIR=%COSYVOICE_HOME%"
+set "PY311=python"
 
 echo [1/3] Check CosyVoice TTS service (9881)...
 netstat -ano | findstr ":9881" | findstr "LISTENING" >nul 2>&1

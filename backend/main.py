@@ -7789,7 +7789,7 @@ async def api_sing(request: Request):
 #  歌曲库：AI 学歌（导入 / 列表 / 学习 / 删除 / 试听）
 # ═══════════════════════════════════════════════════════════
 
-# RVC 歌声服务地址（独立进程，见 D:\RVC\server.py，端口 9882）
+# RVC 歌声服务地址（独立进程，见 %RVC_HOME%\server.py，端口 9882）
 RVC_SERVICE = os.environ.get("RVC_SERVICE_URL", "http://127.0.0.1:9882")
 RVC_MODEL = os.environ.get("RVC_MODEL", "guzi")
 
