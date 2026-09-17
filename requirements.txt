@@ -1,31 +1,39 @@
-# HomeAime 后端依赖（由源码 import 自动汇总，未锁定版本）
-Crypto
-Pillow
-ast
-av
-azure
-chromadb
-comtypes
-edge_tts
+# HomeAime 后端依赖
+# 由源码 import 汇总，未锁定版本；部分依赖仅特定功能需要（见分组注释）。
+# Python 3.11+
+
+# ---- Web 服务与 HTTP ----
 fastapi
-faster-whisper
-httpx
-imageio_ffmpeg
-keyboard
-mimetypes
-mss
-multiprocessing
-onnxruntime
-psutil
-py_compile
-pyautogui
-pycaw
-pydantic
-pygetwindow
-pypinyin
-sentence-transformers
-torch
-types
 uvicorn[standard]
+httpx
 websockets
-whisper
+pydantic
+
+# ---- 向量检索与语义 ----
+chromadb
+sentence-transformers
+numpy
+
+# ---- 本地语音链路（识别 faster-whisper / 合成 edge-tts、CosyVoice）----
+faster-whisper
+openai-whisper
+edge-tts
+av
+imageio-ffmpeg
+
+# ---- Windows 本机能力（前台窗口监听、快捷触发、屏幕截图）----
+comtypes
+pycaw
+pygetwindow
+pyautogui
+keyboard
+mss
+psutil
+
+# ---- 其他 ----
+pycryptodome          # AES 加密备份
+pypinyin              # 中文拼音处理
+Pillow                # 图像处理
+onnxruntime           # 本地推理运行时
+torch                 # sentence-transformers 后端
+azure-cognitiveservices-speech   # 备用云端语音
